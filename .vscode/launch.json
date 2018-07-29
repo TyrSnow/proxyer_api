@@ -1,0 +1,34 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/ts-node/dist/bin.js",
+      "args": [
+        "${workspaceRoot}/api/server.ts" // 入口文件
+      ],
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector",
+      "stopOnEntry": false,
+      "runtimeExecutable": null,
+      "runtimeArgs": [
+        "--nolazy",
+        "--es_staging",
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "internalConsole",
+    },
+    {
+      "name": "Attach",
+      "type": "node",
+      "request": "attach",
+      "port": 5858,
+      "sourceMaps": true,
+      "outFiles": ["./build/**/*.js"]
+    }
+  ]
+}

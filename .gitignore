@@ -1,0 +1,12 @@
+node_modules
+
+logs
+profile
+dist
+uploads
+
+coverage
+.nyc_output
+coverage.lcov
+
+.bak

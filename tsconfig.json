@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "rootDir":"./",
+    "outDir":"./dist",
+    "watch": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "baseUrl": "./"
+  },
+  "include":[
+    "./api/**/*.ts"
+  ],
+  "exclude":[
+    "views",
+    "static"
+  ]
+}
