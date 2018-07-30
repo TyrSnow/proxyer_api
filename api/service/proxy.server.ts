@@ -44,11 +44,13 @@ class ProxyServerService {
     proxy_id: string,
     config: ProxyModel.Proxy,
   ) {
+    console.debug('Will update config: ', proxy_id);
     let server = this.servers.get(proxy_id);
     if (server) {
       return server.update_config(config);
     }
-    return Promise.reject(CODE.PROXY_NOT_START);
+    // return Promise.reject(CODE.PROXY_NOT_START);
+    return Promise.resolve(CODE.SUCCESS);
   }
 
   restart(

@@ -43,8 +43,10 @@ export default class ProxyNode {
               break;
             case 'PROXY_READY':
               this.status = PROXY_STATUS.RUNNING;
-              resolved = true;
-              resolve(this.status);
+              if (!resolved) {
+                resolved = true;
+                resolve(this.status);
+              }
               break;
             default:
               console.log('Unknow message: ', message);
@@ -58,7 +60,7 @@ export default class ProxyNode {
   }
   
   update_config(config: ProxyModel.Proxy) {
-    return this.send(JSON.stringify(config));
+    return this.send(config);
   }
 
   restart(proxy: ProxyModel.Proxy) {

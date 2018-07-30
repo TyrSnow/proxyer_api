@@ -7,6 +7,7 @@ import mask_object from "../tools/maskObject";
 import { portIsOccupied } from "./../tools/proxy.util";
 import { fork } from 'child_process';
 import ProxyServerService from "./proxy.server";
+import { PROXY_STATUS } from "../constants/proxy";
 
 @service()
 class ProxyService {
@@ -111,8 +112,15 @@ class ProxyService {
    */
   update_proxy(
     proxy_id: string,
-    data: object,
+    data: any,
   ) {
+    if (data.port) { // 检查状态
+      let status = this.serverService.syncStatus(proxy_id);
+      if (status === PROXY_STATUS.RUNNING) {
+        return Promise.reject(CODE.RUNNING_PROXY_PORT_CANNOT_CHANGE);
+      }
+    }
+
     return Proxy.findOneAndUpdate({
       _id: proxy_id,
     }, mask_object(data, ['name', 'desc', 'port']), {
@@ -172,6 +180,35 @@ class ProxyService {
       return Promise.reject(CODE.HOST_ALREADY_EXIST);
     }).then((proxy) => {
       return Promise.resolve(proxy.hosts.pop());
+    });
+  }
+
+  delete_proxy(
+    proxy_id: string,
+    user_id: string,
+  ) {
+    return Proxy.remove({
+      _id: proxy_id,
+      creator: user_id,
+    }).then(proxy => {
+      if (proxy) {
+        return Promise.resolve();
+      }
+      return Promise.reject(CODE.ONLY_CREATOR_CAN_DELETE_PROXY);
+    });
+  }
+
+  force_delete_proxy(
+    proxy_id: string,
+    user_id: string,
+  ) {
+    return Proxy.remove({
+      _id: proxy_id,
+    }).then(proxy => {
+      if (proxy) {
+        return Promise.resolve();
+      }
+      return Promise.reject(CODE.PROXY_NOT_EXIST);
     });
   }
 }

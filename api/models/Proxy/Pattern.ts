@@ -9,7 +9,7 @@ const Pattern = <ProxyModel.PatternSchema>new Schema({
   match: {
     type: String
   },
-  methods: [Number],
+  allow_methods: [Number],
   throttle: {
     type: Number,
     enum: PATTERN_THROTTLE_TYPE,

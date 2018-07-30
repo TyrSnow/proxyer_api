@@ -50,7 +50,7 @@ class ProxyRequest {
       port: host.port,
     }, host);
 
-    console.log('Proxy to: ', option, ' with pattern: ', pattern);
+    // console.log('Proxy to: ', option, ' with pattern: ', pattern);
     let nReq = http.request(option, (nRes) => {
       this.res.writeHead(nRes.statusCode, nRes.headers);
       if (pattern.throttle === PATTERN_THROTTLE_TYPE.SPEED) {
@@ -68,6 +68,11 @@ class ProxyRequest {
     } else if (pattern.throttle === PATTERN_THROTTLE_TYPE.DELAY) {
       setTimeout(() => {
         this.req.pipe(nReq);
+      }, pattern.delay * 1000);
+    } else if (pattern.throttle === PATTERN_THROTTLE_TYPE.DELAY_BLOCK) {
+      setTimeout(() => {
+        this.res.writeHead(500);
+        this.res.end();
       }, pattern.delay * 1000);
     } else {
       this.req.pipe(nReq);

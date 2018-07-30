@@ -3,6 +3,7 @@ import * as http from 'http';
 import { ProxyModel } from '../models/Proxy/index.d';
 import * as url from 'url';
 import ProxyRequest from './Request';
+import { METHOD_MAP } from './http';
 
 export default class App {
   private server: http.Server
@@ -49,8 +50,9 @@ export default class App {
 
   match_request_pattern(req: Request) {
     return this.patterns.find(pattern => {
-      if (pattern.mathods) {
-        if (!(req.method in pattern.mathods)) {
+      if (pattern.allow_methods) {
+        console.debug('Allow methods: ', pattern.allow_methods, '; Method: ', req.method);
+        if (!(METHOD_MAP[req.method] in pattern.allow_methods)) {
           return false;
         }
       }

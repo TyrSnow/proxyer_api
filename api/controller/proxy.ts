@@ -211,6 +211,26 @@ class ProxyController {
       ERROR(req, res),
     );
   }
+
+  @route('/:proxy_id', 'delete')
+  @auth(USER_AUTH.USER)
+  delete_proxy(req, res) {
+    const { proxy_id } = req.params;
+    const { _id, auth } = req.user;
+
+    if (auth === USER_AUTH.USER) {
+      return this.proxyService.delete_proxy(proxy_id, _id).then(
+        SUCCESS(req, res),
+      ).catch(
+        ERROR(req, res),
+      );
+    }
+    return this.proxyService.force_delete_proxy(proxy_id, _id).then(
+      SUCCESS(req, res),
+    ).catch(
+      ERROR(req, res),
+    );
+  }
 }
 
 export default ProxyController;

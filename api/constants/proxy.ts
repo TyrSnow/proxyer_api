@@ -11,4 +11,5 @@ export enum PATTERN_THROTTLE_TYPE {
   SPEED,
   DELAY,
   PAUSE,
+  DELAY_BLOCK,
 }

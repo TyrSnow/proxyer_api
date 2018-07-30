@@ -18,6 +18,7 @@ const CODE = {
   RESOURCE_CREATED: C(10500, '开始生成资源'), // 异步操作
   RESOURCE_NOT_READY: C(10501, '资源没有就绪'),
   RESOURCE_ERORR: C(10502, '资源生成失败'),
+
   // 用户权限
   NOT_AUTHORIZE: C(20000, '需要登陆才能进行此项操作', 401),
   LOW_AUTHORIZE: C(20001, '您的权限不足', 401),
@@ -53,6 +54,8 @@ const CODE = {
   PROXY_START_ERROR: C(32005, '代理服务器启动失败'),
   PROXY_PORT_OCCUPY: C(32006, '目标端口已经被占用'),
   PROXY_PORT_UNEXIST: C(32007, '需要指定服务器端口号'),
+  RUNNING_PROXY_PORT_CANNOT_CHANGE: C(32008, '运行中的服务器端口不能被修改'),
+  ONLY_CREATOR_CAN_DELETE_PROXY: C(32009, '只有项目创建人可以删除此项目'),
 };
 
 export default CODE;

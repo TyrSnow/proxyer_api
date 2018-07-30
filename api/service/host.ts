@@ -6,11 +6,13 @@ import { ProxyModel } from "../models/Proxy/index.d";
 import mask_object from "../tools/maskObject";
 import update_sub_doc from "../tools/update_sub_doc";
 import CODE from "../constants/code";
+import ProxyServerService from "./proxy.server";
 
 @service()
 class HostService {
   constructor(
     private proxyService: ProxyService,
+    private serverService: ProxyServerService,
   ) {}
   
   private get_proxy_by_host(
@@ -62,6 +64,7 @@ class HostService {
     let host = proxy.hosts.id(host_id);
     update_sub_doc(host, data, ['name', 'target', 'changeOrigin']);
     return proxy.save().then(proxy => {
+      this.serverService.update_config(proxy._id.toHexString(), proxy);
       return this.get_host_from_proxy(proxy, host_id);
     });
   }

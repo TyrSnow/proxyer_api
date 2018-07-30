@@ -3,11 +3,13 @@ import ProxyService from './proxy';
 import { ProxyModel } from "../models/Proxy/index.d";
 import update_sub_doc from "../tools/update_sub_doc";
 import { Regs } from "../constants/reg";
+import ProxyServerService from "./proxy.server";
 
 @service()
 class PatternService {
   constructor(
     private proxyService: ProxyService,
+    private serverService: ProxyServerService,
   ) {}
 
   private get_proxy_by_pattern_id(
@@ -92,8 +94,11 @@ class PatternService {
   ) {
     let pattern = proxy.patterns.id(pattern_id);
     // TODO: 特殊处理server字段
-    update_sub_doc(pattern, data, ['enable', 'pause', 'match', 'methods', 'server', 'throttle', 'speed', 'delay']);
-    return proxy.save();
+    update_sub_doc(pattern, data, ['enable', 'pause', 'match', 'allow_methods', 'server', 'throttle', 'speed', 'delay']);
+    return proxy.save().then(newProxy => {
+      this.serverService.update_config(proxy._id.toHexString(), newProxy);
+      return Promise.resolve(newProxy);
+    });
   }
 
   update_pattern(
