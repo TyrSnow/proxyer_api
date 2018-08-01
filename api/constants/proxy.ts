@@ -6,6 +6,11 @@ export enum PROXY_STATUS {
   UPDATING,
 }
 
+export enum PROXY_ERROR_CODE {
+  ILLEGAL_CONFIG,
+  UNKNOWN_ERROR,
+}
+
 export enum PATTERN_THROTTLE_TYPE {
   NONE = 0,
   SPEED,

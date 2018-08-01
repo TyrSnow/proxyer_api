@@ -23,11 +23,15 @@ class ProxyService {
     name: string,
     port: string,
     creator: string,
+    patterns?: any[],
+    hosts?: any[],
   ): Promise<ProxyModel.Proxy> {
     let proxy = new Proxy({
       name,
       port,
       creator,
+      patterns,
+      hosts,
     });
 
     return proxy.save().then((res) => {
@@ -136,7 +140,21 @@ class ProxyService {
       return Promise.reject(err);
     });
   }
-    
+
+  /**
+   * 单独更新某个字段（慎用）
+   */
+  update_proxy_attr(
+    proxy_id: string,
+    key: string,
+    data: any,
+  ) {
+    return this.get_selective(proxy_id).then(proxy => {
+      proxy.set(key, data);
+      return proxy.save();
+    });
+  }
+  
   /**
    * 设置代理服务器的默认目标服务器
    */
@@ -182,12 +200,15 @@ class ProxyService {
       return Promise.resolve(proxy.hosts.pop());
     });
   }
-
+  
+  /**
+   * 删除指定代理（需要创建者本人删除）
+   */
   delete_proxy(
     proxy_id: string,
     user_id: string,
   ) {
-    return Proxy.remove({
+    return Proxy.findOneAndRemove({
       _id: proxy_id,
       creator: user_id,
     }).then(proxy => {
@@ -197,7 +218,10 @@ class ProxyService {
       return Promise.reject(CODE.ONLY_CREATOR_CAN_DELETE_PROXY);
     });
   }
-
+  
+  /**
+   * 强制删除指定代理
+   */
   force_delete_proxy(
     proxy_id: string,
     user_id: string,

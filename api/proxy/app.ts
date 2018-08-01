@@ -3,9 +3,13 @@ import * as http from 'http';
 import { ProxyModel } from '../models/Proxy/index.d';
 import * as url from 'url';
 import ProxyRequest from './Request';
-import { METHOD_MAP } from './http';
+import { METHOD_MAP } from '../constants/http';
 
 export default class App {
+  static generate_match_reg(match: string) {
+    return new RegExp(match);
+  }
+
   private server: http.Server
   private patterns: ProxyModel.PatternModel[];
   private hosts: HostOption[];
@@ -18,11 +22,22 @@ export default class App {
   constructor() {
   }
   
+  /**
+   * 更新代理配置
+   */
   set_config(config: ProxyModel.Proxy) {
-    this.patterns = config.patterns.filter(pattern => pattern.enable).map(pattern => {
-      pattern.match = new RegExp(pattern.match);
+    // 清理未激活的，并按照sort值排序，最后将match换成正则表达式
+    this.patterns = config.patterns.filter(pattern => pattern.enable).sort((pre, after) => (
+      pre.sort > after.sort ? -1 : 0
+    )).map(pattern => {
+      pattern.match = App.generate_match_reg(pattern.match as string);
+      if (pattern.allow_methods && pattern.allow_methods.length === 0) {
+        delete pattern.allow_methods;
+      }
       return pattern;
     });
+
+    // 补充host的protocal，并解析host的target
     this.hosts = config.hosts.map(host => {
       let { target, changeOrigin } = host;
       if (!target.match(/^https?/)) {
@@ -45,13 +60,17 @@ export default class App {
       this.hostMap.set(host._id, hostOption);
       return hostOption;
     });
+
+    // 单独记录默认host 
     this.default_host = this.hostMap.get(config.hosts.find(host => host.active)._id);
   }
-
+  
+  /**
+   * 匹配请求对应的模式
+   */
   match_request_pattern(req: Request) {
     return this.patterns.find(pattern => {
       if (pattern.allow_methods) {
-        console.debug('Allow methods: ', pattern.allow_methods, '; Method: ', req.method);
         if (!(METHOD_MAP[req.method] in pattern.allow_methods)) {
           return false;
         }

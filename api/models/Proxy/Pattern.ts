@@ -21,6 +21,10 @@ const Pattern = <ProxyModel.PatternSchema>new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Host',
   },
+  sort: {
+    type: Number,
+    default: -1,
+  },
   enable: {
     type: Boolean,
     default: true,

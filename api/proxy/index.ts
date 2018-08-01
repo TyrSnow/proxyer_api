@@ -7,14 +7,11 @@ export default class ProxyNode {
   static generate_proxy_argv(proxy: ProxyModel.Proxy) {
     return ['-p', proxy.port.toString()];
   }
-  
-  static validate_start_env(proxy: ProxyModel.Proxy) {
-
-  }
 
   private node: ChildProcess;
   
   public status: PROXY_STATUS = PROXY_STATUS.STOP;
+  public exit_code: number;
 
   constructor(
     private proxy: ProxyModel.Proxy,
@@ -28,7 +25,12 @@ export default class ProxyNode {
       this.node.on('exit', (code) => {
         console.debug('Proxy node exit: ', code);
         this.node.removeAllListeners();
-        this.status = code === 0 ? PROXY_STATUS.STOP : PROXY_STATUS.ERROR;
+        if (code === 0) {
+          this.status = PROXY_STATUS.STOP;
+        } else {
+          this.exit_code = code;
+          this.status = PROXY_STATUS.ERROR;
+        }
         if (resolved) {
           reject(CODE.PROXY_START_ERROR);
         }
@@ -39,9 +41,10 @@ export default class ProxyNode {
         if (typeof message === 'string') {
           switch(message) {
             case 'START_SUCCESS':
+              this.status = PROXY_STATUS.UPDATING;
               this.node.send(this.proxy);
               break;
-            case 'PROXY_READY':
+            case 'PROXY_UPDATED':
               this.status = PROXY_STATUS.RUNNING;
               if (!resolved) {
                 resolved = true;
@@ -60,6 +63,7 @@ export default class ProxyNode {
   }
   
   update_config(config: ProxyModel.Proxy) {
+    this.status = PROXY_STATUS.UPDATING;
     return this.send(config);
   }
 

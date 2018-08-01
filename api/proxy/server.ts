@@ -18,7 +18,7 @@ process.on('message', (message) => {
   if (message.port) {
     try {
       app.set_config(message);
-      process.send('PROXY_READY');
+      process.send('PROXY_UPDATED');
     } catch (e) {
       process.exit(1);
     }

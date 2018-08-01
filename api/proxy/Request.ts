@@ -39,6 +39,10 @@ class ProxyRequest {
     process.send(this.toJSON());
   }
   
+  proxy_https() {
+
+  }
+
   proxy(pattern: ProxyModel.PatternBase = {}) {
     let { host }= this;
     let { method, headers, hostname } = this.req;

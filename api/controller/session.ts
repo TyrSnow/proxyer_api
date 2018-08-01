@@ -16,6 +16,26 @@ class SessionController {
     private userService: UserService,
     private tokenService: TokenService,
   ) {}
+  
+  @route('/config', 'put')
+  @auth(USER_AUTH.USER)
+  modifyUserConfig(req, res) {
+    const { _id, remember } = req.user;
+    const config = req.body;
+
+    return this.userService.update_user_config(_id, config).then(
+      (changedUser) => this.tokenService.sign({
+        _id: changedUser._id,
+        name: changedUser.name,
+        email: changedUser.email,
+        phone: changedUser.phone,
+        head: changedUser.head,
+        auth: changedUser.auth,
+        config: changedUser.config,
+        remember: remember,
+      }, remember ? '30d' : '1d'),
+    );
+  }
 
   @route('/password', 'put')
   @auth(USER_AUTH.USER)
@@ -37,6 +57,7 @@ class SessionController {
             phone: changedUser.phone,
             head: changedUser.head,
             auth: changedUser.auth,
+            config: changedUser.config,
             remember: user.remember,
           }, user.remember ? '30d' : '1d'),
         );
@@ -68,6 +89,7 @@ class SessionController {
             phone: _user.phone,
             head: _user.head,
             auth: _user.auth,
+            config: _user.config,
             remember: remember,
           }, remember ? '30d' : '1d'))
         });
@@ -83,7 +105,7 @@ class SessionController {
   @auth(USER_AUTH.USER)
   solve_auth(req, res) {
     let { user } = req;
-    let { iat, exp, ...other } = user;
+    let { iat, exp, remember, ...other } = user;
     this.userService.find_user_by_id(user._id).then(
       _user => {
         if (_user.block) {
@@ -92,7 +114,16 @@ class SessionController {
         if (other.remember) {
           return Promise.resolve(other);
         }
-        return Promise.resolve(this.tokenService.sign(other));
+        return Promise.resolve(this.tokenService.sign({
+          _id: _user._id,
+          name: _user.name,
+          email: _user.email,
+          phone: _user.phone,
+          head: _user.head,
+          auth: _user.auth,
+          config: _user.config,
+          remember,
+        }, remember ? '30d' : '1d'));
       }
     ).then(
       SUCCESS(req, res),

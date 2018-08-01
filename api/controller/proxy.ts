@@ -4,6 +4,7 @@ import { auth, USER_AUTH } from "./../intercepror/auth";
 import ProxyService from "../service/proxy";
 import { SUCCESS, ERROR, LIST } from "../core/response";
 import PatternService from "../service/pattern";
+import CODE from "../constants/code";
 
 @controller({
   path: '/proxy',
@@ -97,10 +98,33 @@ class ProxyController {
   @auth(USER_AUTH.USER)
   create(req, res) {
     // 创建一个新的代理
-    const { name, port } = req.body;
+    const { name, port, proxyId } = req.body;
     const { _id } = req.user;
+  
+    if (proxyId) {
+      return this.proxyService.get_selective(proxyId).then(
+        proxy => {
+          if (proxy) {
+            let patterns = proxy.patterns.toObject().map(pattern => {
+              delete pattern._id;
+              return pattern;
+            });
+            let hosts = proxy.hosts.toObject().map(host => {
+              delete host._id;
+              return host;
+            });
 
-    this.proxyService.create(name, port, _id).then(
+            return this.proxyService.create(name, port, _id, patterns, hosts);
+          }
+          return Promise.reject(CODE.PROXY_NOT_EXIST);
+        },
+      ).then(
+        SUCCESS(req, res),
+      ).catch(
+        ERROR(req, res),
+      );
+    }
+    return this.proxyService.create(name, port, _id).then(
       SUCCESS(req, res),
     ).catch(
       ERROR(req, res),

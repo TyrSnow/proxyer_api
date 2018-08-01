@@ -27,6 +27,7 @@ declare namespace ProxyModel {
   interface PatternBase {
     match?: string | RegExp
     allow_methods?: METHOD[]
+    sort?: number
     enable?: boolean
     server?: string | HostModel
     throttle?: PATTERN_THROTTLE_TYPE

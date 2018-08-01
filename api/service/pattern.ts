@@ -1,7 +1,7 @@
 import { service } from "../core/injector";
 import ProxyService from './proxy';
 import { ProxyModel } from "../models/Proxy/index.d";
-import update_sub_doc from "../tools/update_sub_doc";
+import updateSubDoc from "../tools/updateSubDoc";
 import { Regs } from "../constants/reg";
 import ProxyServerService from "./proxy.server";
 
@@ -94,7 +94,7 @@ class PatternService {
   ) {
     let pattern = proxy.patterns.id(pattern_id);
     // TODO: 特殊处理server字段
-    update_sub_doc(pattern, data, ['enable', 'pause', 'match', 'allow_methods', 'server', 'throttle', 'speed', 'delay']);
+    updateSubDoc(pattern, data, ['enable', 'pause', 'match', 'allow_methods', 'server', 'throttle', 'speed', 'delay']);
     return proxy.save().then(newProxy => {
       this.serverService.update_config(proxy._id.toHexString(), newProxy);
       return Promise.resolve(newProxy);

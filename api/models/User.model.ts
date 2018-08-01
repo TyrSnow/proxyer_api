@@ -30,6 +30,9 @@ let model = new Schema({
     type: String,
     required: true,
   },
+  config: {
+    proxySort: [String],
+  },
   head: String,
   block: Boolean,
   block_date: Date,

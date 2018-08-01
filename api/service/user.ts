@@ -226,6 +226,24 @@ class UserService {
       }
     );
   }
+
+  update_user_config(
+    user_id: string,
+    config: UserModel.UserConfig,
+  ) {
+    return User.findOneAndUpdate({
+      _id: user_id,
+    }, {
+      config,
+    }, {
+      new: true,
+    }).then(effected => {
+      if (effected) {
+        return Promise.resolve(effected);
+      }
+      return Promise.reject(CODE.USER_NOT_EXIST);
+    })
+  }
 }
 
 export default UserService;
