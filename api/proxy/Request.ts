@@ -5,6 +5,7 @@ import { ObjectId } from 'bson';
 import { Throttle } from 'stream-throttle';
 import { ProxyModel } from "../models/Proxy/index.d";
 import { PATTERN_THROTTLE_TYPE } from '../constants/proxy';
+import { METHOD_MAP } from '../constants/http';
 
 /**
  * 链接记录
@@ -24,6 +25,14 @@ class ProxyRequest {
 
   public id: string = new ObjectId().toHexString();
   private path: string;
+  private pathname: string;
+  private query: string;
+  private finished: boolean = false;
+  private requestContent: string = '';
+  private responseContent: string = '';
+  private responseHeaders: any;
+  private startTime: number;
+  private cost: number;
 
   constructor(
     private req: any,
@@ -31,12 +40,15 @@ class ProxyRequest {
     private host: HostOption,
     private pattern?: ProxyModel.PatternModel,
   ) {
-    let { path } = url.parse(req.url);
+    let { path, pathname, query } = url.parse(req.url);
     this.path = path;
+    this.pathname = pathname;
+    this.query = query;
+    this.startTime = new Date().valueOf();
+    process.send(this.toJSON());
     if (!pattern || (pattern.throttle !== PATTERN_THROTTLE_TYPE.PAUSE)) {
       this.proxy(pattern);
     }
-    process.send(this.toJSON());
   }
   
   proxy_https() {
@@ -56,27 +68,48 @@ class ProxyRequest {
 
     // console.log('Proxy to: ', option, ' with pattern: ', pattern);
     let nReq = http.request(option, (nRes) => {
+      this.responseHeaders = nRes.headers;
       this.res.writeHead(nRes.statusCode, nRes.headers);
       if (pattern.throttle === PATTERN_THROTTLE_TYPE.SPEED) {
-        nRes.pipe(new Throttle({ rate: pattern.speed })).pipe(this.res);
+        nRes.pipe(new Throttle({ rate: pattern.speed * 1024 })).on('end', () => {
+          console.log('finished.');
+          this.finished = true;
+          this.cost = new Date().valueOf() - this.startTime;
+          process.send(this.toJSON());
+        }).pipe(this.res);
       } else {
-        nRes.pipe(this.res);
+        nRes.on('end', () => {
+          console.log('finished.');
+          this.finished = true;
+          this.cost = new Date().valueOf() - this.startTime;
+          process.send(this.toJSON());
+        }).pipe(this.res);
       }
+
+      nRes.on('data', (data) => {
+        this.responseContent+= data;
+      });
     }).on('error', (e) => {
       console.log('request error: ', e);
       this.res.end();
     });
 
     if (pattern.throttle === PATTERN_THROTTLE_TYPE.SPEED) {
-      this.req.pipe(new Throttle({ rate: pattern.speed })).pipe(nReq);
+      this.req.pipe(new Throttle({ rate: pattern.speed * 1024 })).pipe(nReq).on('data', (data) => {
+        this.requestContent+= data;
+      });
     } else if (pattern.throttle === PATTERN_THROTTLE_TYPE.DELAY) {
       setTimeout(() => {
-        this.req.pipe(nReq);
+        this.req.pipe(nReq).on('data', (data) => {
+          this.requestContent+= data;
+        });
       }, pattern.delay * 1000);
     } else if (pattern.throttle === PATTERN_THROTTLE_TYPE.DELAY_BLOCK) {
       setTimeout(() => {
         this.res.writeHead(500);
         this.res.end();
+        this.finished = true;
+        process.send(this.toJSON());
       }, pattern.delay * 1000);
     } else {
       this.req.pipe(nReq);
@@ -88,16 +121,20 @@ class ProxyRequest {
     this.res.end();
   }
 
-  is_finished() {
-    return this.req.finished;
-  }
-
   toJSON() {
     return {
-      id: this.id,
-      path: this.path,
+      _id: this.id,
+      url: this.pathname,
+      query: this.query,
+      method: METHOD_MAP[this.req.method],
+      headers: this.req.headers,
+      finished: this.finished,
       status: this.res.statusCode,
-      matched: this.pattern ? this.pattern._id : undefined,
+      cost: this.cost,
+      responseContent: this.responseContent,
+      responseHeaders: this.responseHeaders,
+      requestContent: this.requestContent,
+      pattern: this.pattern ? this.pattern._id : undefined,
     };
   }
 }

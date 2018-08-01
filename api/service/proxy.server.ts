@@ -3,10 +3,15 @@ import { ProxyModel } from "../models/Proxy/index.d";
 import ProxyNode from '../proxy/index';
 import CODE from "../constants/code";
 import { PROXY_STATUS } from "../constants/proxy";
+import RequestLogger from "./request.logger";
 
 @service()
 class ProxyServerService {
   private servers: Map<string, ProxyNode> = new Map();
+
+  constructor(
+    private logger: RequestLogger,
+  ) {}
 
   start(
     proxy_id: string,
@@ -14,7 +19,7 @@ class ProxyServerService {
   ) {
     let server = this.servers.get(proxy_id);
     if (!server) {
-      server = new ProxyNode(proxy);
+      server = new ProxyNode(proxy, this.logger);
       this.servers.set(proxy_id, server);
       return server.start();
     }

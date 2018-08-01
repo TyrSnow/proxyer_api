@@ -35,10 +35,6 @@ model.methods.detail = function () {
   return this.populate('creator', '_id name');
 }
 
-model.post('save', () => {
-  // 更新对应的代理服务器
-});
-
 const Proxy = mongoose.model<ProxyModel.Proxy>('Proxy', model);
 
 export default Proxy;

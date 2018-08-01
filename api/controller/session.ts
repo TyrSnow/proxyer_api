@@ -17,6 +17,30 @@ class SessionController {
     private tokenService: TokenService,
   ) {}
   
+  @route('/config/sortList', 'put')
+  @auth(USER_AUTH.USER)
+  modifySortConfig(req, res) {
+    const { _id, remember } = req.user;
+    const { sortList } = req.body;
+    
+    return this.userService.update_user_sort_config(_id, sortList).then(
+      (changedUser) => this.tokenService.sign({
+        _id: changedUser._id,
+        name: changedUser.name,
+        email: changedUser.email,
+        phone: changedUser.phone,
+        head: changedUser.head,
+        auth: changedUser.auth,
+        config: changedUser.config,
+        remember: remember,
+      }, remember ? '30d' : '1d'),
+    ).then(
+      SUCCESS(req, res),
+    ).catch(
+      ERROR(req, res),
+    );
+  }
+
   @route('/config', 'put')
   @auth(USER_AUTH.USER)
   modifyUserConfig(req, res) {
@@ -34,6 +58,10 @@ class SessionController {
         config: changedUser.config,
         remember: remember,
       }, remember ? '30d' : '1d'),
+    ).then(
+      SUCCESS(req, res),
+    ).catch(
+      ERROR(req, res),
     );
   }
 

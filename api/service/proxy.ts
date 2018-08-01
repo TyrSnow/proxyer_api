@@ -62,7 +62,7 @@ class ProxyService {
    * 不分页查询代理服务器
    */
   list_all() {
-    return Proxy.find({}, '_id name port createdAt');
+    return Proxy.find({}, '_id name port private createdAt');
   }
   
   /**

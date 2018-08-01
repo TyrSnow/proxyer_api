@@ -242,7 +242,25 @@ class UserService {
         return Promise.resolve(effected);
       }
       return Promise.reject(CODE.USER_NOT_EXIST);
-    })
+    });
+  }
+
+  update_user_sort_config(
+    user_id: string,
+    sortList: string[],
+  ) {
+    return User.findOneAndUpdate({
+      _id: user_id,
+    }, {
+      'config.proxySort': sortList,
+    }, {
+      new: true,
+    }).then(effected => {
+      if (effected) {
+        return Promise.resolve(effected);
+      }
+      return Promise.reject(CODE.USER_NOT_EXIST);
+    });
   }
 }
 

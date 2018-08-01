@@ -1,27 +1,26 @@
 import { Document } from 'mongoose';
+import { ObjectID } from 'bson';
 
 declare namespace RequestModel {
-  interface RequestBody {
-    headers: Map<string, any>
-    data: Map<string, any>
-  }
-  
-  interface ResponseBody {
-    headers: Map<string, any>
-    data: Map<string, any>
+  interface ResponseInfo {
+    headers?: Object
+    content?: string
   }
 
-  interface RequestLog {
-    request: RequestBody
-    response: ResponseBody
-  }
-
-  interface Request extends Document {
+  interface RequestInfo {
+    _id: any
     url: string
     method: string
-    status: string
-    log: RequestLog
+    status: number
+    finished: boolean
+    cost: number
     proxy: string
-    pattern: string
+    pattern?: string
+    params?: Object
+    headers?: Object
+    data?: Object
+  }
+
+  interface Request extends RequestInfo, Document {
   }
 }

@@ -71,11 +71,7 @@ class ProxyController {
     // 添加一个模式
     const { proxy_id } = req.params;
 
-    this.proxyService.get_selective(proxy_id).then(
-      (proxy) => {
-        return proxy.add_pattern(req.body);
-      }
-    ).then(
+    this.patternService.create_pattern(req.body, proxy_id).then(
       SUCCESS(req, res),
     ).catch(
       ERROR(req, res),

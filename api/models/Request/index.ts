@@ -3,13 +3,27 @@ import { RequestModel } from './index.d';
 
 let model = new mongoose.Schema({
   url: String,
-  method: String,
-  status: String,
+  params: Object,
+  headers: Object,
+  data: Object,
+  method: Number,
+  status: Number,
+  cost: Number,
+  finished: Boolean,
+  requestContent: String,
+  responseContent: String,
+  responseHeaders: Object,
   proxy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Proxy',
   },
   pattern: String,
+}, {
+  timestamps: true,
+});
+
+model.index({
+  'proxy': 1,
 });
 
 const Request = mongoose.model<RequestModel.Request>('Request', model);

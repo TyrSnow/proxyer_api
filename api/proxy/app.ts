@@ -36,6 +36,8 @@ export default class App {
       }
       return pattern;
     });
+  
+    console.log(JSON.stringify(this.patterns));
 
     // 补充host的protocal，并解析host的target
     this.hosts = config.hosts.map(host => {

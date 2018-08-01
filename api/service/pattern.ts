@@ -116,6 +116,26 @@ class PatternService {
     });
   }
 
+  create_proxy_pattern(
+    proxy: ProxyModel.Proxy,
+    pattern: ProxyModel.PatternBase,
+  ) {
+    proxy.patterns.push(pattern);
+    return proxy.save().then(newProxy => {
+      this.serverService.update_config(proxy._id.toHexString(), newProxy);
+      return Promise.resolve(newProxy);
+    });
+  }
+
+  create_pattern(
+    data: ProxyModel.PatternBase,
+    proxy_id: string,
+  ) {
+    return this.proxyService.get_selective(proxy_id).then(proxy => {
+      return this.create_proxy_pattern(proxy, data);
+    });
+  }
+
   delete_pattern(
     pattern_id: string,
     proxy_id?: string,
@@ -124,7 +144,10 @@ class PatternService {
       proxy => {
         let pattern = proxy.patterns.id(pattern_id);
         pattern.remove();
-        return proxy.save();
+        return proxy.save().then(newProxy => {
+          this.serverService.update_config(proxy._id.toHexString(), newProxy);
+          return Promise.resolve(newProxy);
+        });
       }
     );
   }

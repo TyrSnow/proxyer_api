@@ -1,6 +1,6 @@
 import * as async from 'async';
 
-export function page(current: number, size: number, Model: any, query: object, select: string, sort: object)  {
+export function page(current: number, size: number, Model: any, query: object, select?: string, sort: object = {})  {
   let skip = (current - 1) * size;
   return new Promise((resolve, reject) => {
     async.parallel({

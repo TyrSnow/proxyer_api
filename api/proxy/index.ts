@@ -15,6 +15,7 @@ export default class ProxyNode {
 
   constructor(
     private proxy: ProxyModel.Proxy,
+    private logger: any,
   ) {}
   
   start() {
@@ -37,7 +38,6 @@ export default class ProxyNode {
       });
 
       this.node.on('message', (message) => {
-        console.debug('Receive message: ', message);
         if (typeof message === 'string') {
           switch(message) {
             case 'START_SUCCESS':
@@ -57,7 +57,7 @@ export default class ProxyNode {
           return;
         }
         // 更新日志
-        
+        this.logger.log(this.proxy._id, message);
       });
     });
   }
