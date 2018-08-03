@@ -11,6 +11,18 @@ import { METHOD_MAP } from '../constants/http';
  * 链接记录
  */
 class ProxyRequest {
+  static get_client_ip(req: any) {
+    let ip = req.headers['x-forwarded-for'] ||
+        req.ip ||
+        req.connection.remoteAddress ||
+        req.socket.remoteAddress ||
+        req.connection.socket.remoteAddress || '';
+    if (ip.split(',').length > 0) {
+        ip = ip.split(',')[0]
+    }
+    return ip;
+  }
+
   static combine_path(path: string, host: HostOption) {
     return path;
   }
@@ -26,6 +38,7 @@ class ProxyRequest {
   public id: string = new ObjectId().toHexString();
   private path: string;
   private pathname: string;
+  private clientIp: string;
   private query: string;
   private finished: boolean = false;
   private requestContent: string = '';
@@ -45,6 +58,8 @@ class ProxyRequest {
     this.pathname = pathname;
     this.query = query;
     this.startTime = new Date().valueOf();
+    this.clientIp = ProxyRequest.get_client_ip(req);
+
     process.send(this.toJSON());
     if (!pattern || (pattern.throttle !== PATTERN_THROTTLE_TYPE.PAUSE)) {
       this.proxy(pattern);
@@ -95,14 +110,14 @@ class ProxyRequest {
     });
 
     if (pattern.throttle === PATTERN_THROTTLE_TYPE.SPEED) {
-      this.req.pipe(new Throttle({ rate: pattern.speed * 1024 })).pipe(nReq).on('data', (data) => {
+      this.req.on('data', (data) => {
         this.requestContent+= data;
-      });
+      }).pipe(new Throttle({ rate: pattern.speed * 1024 })).pipe(nReq);
     } else if (pattern.throttle === PATTERN_THROTTLE_TYPE.DELAY) {
       setTimeout(() => {
-        this.req.pipe(nReq).on('data', (data) => {
+        this.req.on('data', (data) => {
           this.requestContent+= data;
-        });
+        }).pipe(nReq);
       }, pattern.delay * 1000);
     } else if (pattern.throttle === PATTERN_THROTTLE_TYPE.DELAY_BLOCK) {
       setTimeout(() => {
@@ -112,7 +127,9 @@ class ProxyRequest {
         process.send(this.toJSON());
       }, pattern.delay * 1000);
     } else {
-      this.req.pipe(nReq);
+      this.req.on('data', (data) => {
+        this.requestContent+= data;
+      }).pipe(nReq);
     }
   }
 
@@ -126,6 +143,7 @@ class ProxyRequest {
       _id: this.id,
       url: this.pathname,
       query: this.query,
+      clientIp: this.clientIp,
       method: METHOD_MAP[this.req.method],
       headers: this.req.headers,
       finished: this.finished,

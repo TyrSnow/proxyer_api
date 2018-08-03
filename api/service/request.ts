@@ -4,6 +4,8 @@ import { page } from "../models/helper";
 
 @service()
 class RequestService {
+  static LIST_PROJECTION = 'method finished status url query cost pattern clientIp';
+
   create_request(
     request: any,
   ) {
@@ -44,7 +46,7 @@ class RequestService {
       updatedAt: {
         $gt: last_modify,
       },
-    }, 'method finished status url query cost pattern').sort({
+    }, RequestService.LIST_PROJECTION).sort({
       _id: -1,
     }).then(list => {
       return Promise.resolve({
@@ -52,6 +54,21 @@ class RequestService {
         last_modify: queryTime,
       });
     });
+  }
+  
+  list_history(
+    proxy_id: string,
+    nearest_modify: Date,
+    pageSize: number,
+  ) {
+    return Request.find({
+      proxy: proxy_id,
+      updatedAt: {
+        $lt: nearest_modify,
+      },
+    }, RequestService.LIST_PROJECTION).sort({
+      _id: -1,
+    }).limit(pageSize);
   }
 
   find_selective(

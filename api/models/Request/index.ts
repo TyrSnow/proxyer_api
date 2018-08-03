@@ -4,6 +4,7 @@ import { RequestModel } from './index.d';
 let model = new mongoose.Schema({
   url: String,
   params: Object,
+  clientIp: String,
   headers: Object,
   data: Object,
   method: Number,

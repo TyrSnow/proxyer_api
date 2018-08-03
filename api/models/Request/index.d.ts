@@ -11,6 +11,7 @@ declare namespace RequestModel {
     _id: any
     url: string
     method: string
+    clientIp: string
     status: number
     finished: boolean
     cost: number
