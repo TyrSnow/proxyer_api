@@ -18,7 +18,23 @@ class TokenService {
               expiresIn
           }
       )
-  }, payload);
+    }, payload);
+  }
+
+  decode(
+    token: string,
+  ) {
+    return jwt.verify(token, config.secretKey);
+  }
+
+  get_token_from_req(req: any) {
+    if (req.headers.authorization) {
+      let splitAuth = req.headers.authorization.split(' ');
+      if (splitAuth[0] === 'Bearer') {
+        return splitAuth[1];
+      }
+    }
+    return;
   }
 }
 

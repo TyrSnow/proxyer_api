@@ -9,10 +9,10 @@ import { SUCCESS, ERROR } from "../core/response";
 class RequestController {
   constructor(
     private requestService: RequestService,
-  ) {} 
+  ) {}
 
   @route('/:request_id', 'get')
-  @auth(USER_AUTH.USER)
+  @auth(USER_AUTH.SHARE_GUEST)
   get_detail(req, res) {
     const { request_id } = req.params;
 

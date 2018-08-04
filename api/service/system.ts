@@ -2,6 +2,14 @@ import { service } from "../core/injector";
 
 @service()
 class SystemService {
+  /** TODO: 放数据库并可配置 */
+  static GUEST_PREFIX = '游客';
+  static GUEST_PASSWORD = 'guest_123';
+  
+  get_global(name: string) {
+    return SystemService[name];
+  }
+
   get_config() { // 读取系统配置
   }
   

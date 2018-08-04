@@ -1,4 +1,5 @@
 export enum USER_AUTH {
+  SHARE_GUEST = -1,
   USER = 0,
   ADMIN,
   ROOT,

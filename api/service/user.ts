@@ -7,11 +7,17 @@ import CODE from "../constants/code";
 import { Regs } from '../constants/reg';
 import mask_object from '../tools/maskObject';
 import { USER_AUTH } from '../constants/user';
+import SystemService from './system';
 
 let log = log4js.getLogger('default');
 
 @service()
 class UserService {
+  static instance_count = 0;
+  constructor(
+    private systemService: SystemService,
+  ) {}
+
   create(
     name: string,
     password: string,
@@ -44,6 +50,21 @@ class UserService {
         return Promise.reject(err);
       }
     );
+  }
+
+  private generate_unique_name() {
+    let namebase = this.systemService.get_global('GUEST_PREFIX');
+    let ms = new Date().valueOf();
+
+    return `${namebase}-${ms}`;
+  }
+  
+  create_guest() {
+    const name = this.generate_unique_name();
+    const password = this.systemService.get_global('GUEST_PASSWORD');
+    const auth = USER_AUTH.SHARE_GUEST;
+
+    return this.create(name, password, auth);
   }
 
   query_user(

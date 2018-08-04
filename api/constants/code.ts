@@ -13,11 +13,12 @@ const CODE = {
   ERROR: C(10500, '服务器异常'),
   ILLEGAL_ID: C(10400, '非法的参数'),
   OPERATIONS_PART_COMPLETE: C(10501, '部分操作未能完成'), // 非批量导入功能不要用这个错误
-  ACCESS_DENY: C(10400, '用户操作被拒绝', 400),
+  ACCESS_DENY: C(10400, '用户操作被拒绝'),
   DOC_NOT_EXIST: C(10401, '资源不存在'),
   RESOURCE_CREATED: C(10500, '开始生成资源'), // 异步操作
   RESOURCE_NOT_READY: C(10501, '资源没有就绪'),
   RESOURCE_ERORR: C(10502, '资源生成失败'),
+  NO_AUTH_OPERATE: C(10503, '不能进行这个操作'),
 
   // 用户权限
   NOT_AUTHORIZE: C(20000, '需要登陆才能进行此项操作', 401),
@@ -56,6 +57,10 @@ const CODE = {
   PROXY_PORT_UNEXIST: C(32007, '需要指定服务器端口号'),
   RUNNING_PROXY_PORT_CANNOT_CHANGE: C(32008, '运行中的服务器端口不能被修改'),
   ONLY_CREATOR_CAN_DELETE_PROXY: C(32009, '只有项目创建人可以删除此项目'),
+
+  // Share
+  SHARE_NOT_EXIST: C(40000, '分享码已经失效或过期'),
+  SHARE_EXPIRES: C(40001, '分享码已经过期'),
 };
 
 export default CODE;
