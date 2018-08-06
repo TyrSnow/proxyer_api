@@ -29,7 +29,6 @@ class ShareController {
   }
 
   @route('/:share_code', 'get')
-  @auth(USER_AUTH.SHARE_GUEST)
   get_share_info(req, res) {
     const { share_code } = req.params;
 

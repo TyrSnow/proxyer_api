@@ -12,7 +12,7 @@ class RequestController {
   ) {}
 
   @route('/:request_id', 'get')
-  @auth(USER_AUTH.SHARE_GUEST)
+  // @auth(USER_AUTH.SHARE_GUEST)
   get_detail(req, res) {
     const { request_id } = req.params;
 
