@@ -1,4 +1,4 @@
-import { service } from "../core/injector";
+import { service } from "../core";
 import RequestService from "./request";
 import { RequestModel } from "../models/Request/index.d";
 
@@ -22,8 +22,7 @@ class RequestLogger {
       }, log)).catch(() => {
         return this.requestService.update_request(_id, other);
       });
-    })
-    
+    });
   }
 }
 

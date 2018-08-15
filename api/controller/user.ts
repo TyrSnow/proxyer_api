@@ -1,10 +1,11 @@
-import { controller, route } from "../core/injector";
+import { controller, route, use } from "../core";
 import UserService from "../service/user";
 import TokenService from "../service/token";
-import { SUCCESS, ERROR, LIST } from "../core/response/index";
-import validator from "../intercepror/validator";
+import { SUCCESS, ERROR, LIST } from "../helper/response";
 import UserSchemas from "../schemas/user.schemas";
-import { auth, USER_AUTH } from "../intercepror/auth";
+import { auth } from "../middleware/auth";
+import { USER_AUTH } from "../constants/user";
+import { validate } from "../middleware/validator";
 
 @controller({
   path: '/users',
@@ -16,7 +17,7 @@ class UserController {
   ) {}
 
   @route('/', 'post')
-  @validator(UserSchemas.regist)
+  @use(validate(UserSchemas.regist))
   regist(req, res) {
     let { name, password, head } = req.body;
     this.userService.create(name, password, head).then(
@@ -38,7 +39,7 @@ class UserController {
   }
 
   @route('/names')
-  @validator(UserSchemas.validName)
+  @use(validate(UserSchemas.validName))
   valid_name(req, res) {
     let { name } = req.query;
     this.userService.valid_name(name).then(
@@ -49,7 +50,7 @@ class UserController {
   }
 
   @route('/', 'get')
-  @auth(USER_AUTH.ADMIN)
+  @use(auth(USER_AUTH.ADMIN))
   list_all(req, res) {
     let { size, current } = req.query;
     

@@ -1,14 +1,14 @@
-import { service } from "../core/injector";
-import { ProxyModel } from "../models/Proxy/index.d";
-import ProxyNode from '../proxy/index';
-import CODE from "../constants/code";
+import { agent } from "../core";
+import ProxyNode from "../proxy";
+import ProxyService from "../service/proxy";
 import { PROXY_STATUS } from "../constants/proxy";
-import RequestLogger from "./request.logger";
+import { ProxyModel } from "../models/Proxy/index.d";
+import RequestLogger from "../service/request.logger";
+import CODE from "../constants/code";
 
-@service()
-class ProxyServerService {
+@agent()
+class ProxyAgent {
   private servers: Map<string, ProxyNode> = new Map();
-
   constructor(
     private logger: RequestLogger,
   ) {}
@@ -54,7 +54,7 @@ class ProxyServerService {
     if (server) {
       return server.update_config(config);
     }
-    // return Promise.reject(CODE.PROXY_NOT_START);
+
     return Promise.resolve(CODE.SUCCESS);
   }
 
@@ -86,4 +86,4 @@ class ProxyServerService {
   }
 }
 
-export default ProxyServerService;
+export default ProxyAgent;

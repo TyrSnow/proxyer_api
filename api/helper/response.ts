@@ -1,30 +1,35 @@
 import * as log4js from 'log4js';
-import CODE from '../../constants/code';
+import CODE from '../constants/code';
 import { Request, Response } from 'express';
 
 const log = log4js.getLogger('default');
 
-const LIST = (
+/**
+ * 列表数据返回
+ */
+export function LIST(
   req: Request,
   res: Response,
   prefix: string = `${req.method} ${req.originalUrl}`,
-) => {
-  return (data) => {
-    const { list = [], page } = data;
+) {
+  return ({ list = [], page }) => {
     res.json({
       success: true,
       list,
       page,
     });
     log.debug(`${prefix} Success`);
-  };
-};
+  }
+}
 
-const SUCCESS = (
+/**
+ * 标准数据返回
+ */
+export function SUCCESS(
   req: Request,
   res: Response,
-  prefix: string = `${req.method} ${req.originalUrl}`
-) => {
+  prefix: string = `${req.method} ${req.originalUrl}`,
+) {
   return (data) => {
     res.json({
       success: true,
@@ -32,17 +37,16 @@ const SUCCESS = (
     });
     log.debug(`${prefix} Success`);
   };
-};
+}
 
 /**
- * 返回文本类型的数据
- * 需要手动配置header的content-type
+ * 文本数据输出
  */
-const TEXT = (
+export function TEXT(
   req: Request,
   res: Response,
-  prefix: string = `${req.method} ${req.originalUrl}`
-) => {
+  prefix: string = `${req.method} ${req.originalUrl}`,
+) {
   return (data: string) => {
     res.send(data);
     log.debug(`${prefix} Success`);
@@ -50,13 +54,13 @@ const TEXT = (
 };
 
 /**
- * 统一的错误处理
+ * 标准错误返回
  */
-const ERROR = (
+export function ERROR(
   req: Request,
   res: Response,
-  prefix: string = `${req.method} ${req.originalUrl}`
-) => {
+  prefix: string = `${req.method} ${req.originalUrl}`,
+) {
   return (err: any) => {
     if (err instanceof Error) {
       // 未处理的系统错误
@@ -74,5 +78,3 @@ const ERROR = (
     }
   };
 };
-
-export { SUCCESS, LIST, TEXT, ERROR };

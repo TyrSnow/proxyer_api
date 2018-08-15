@@ -1,11 +1,12 @@
-import { controller, route } from "../core/injector";
+import { controller, route, use } from "../core";
 import UserService from "../service/user";
 import TokenService from "../service/token";
-import validator from "../intercepror/validator";
 import UserSchemas from "../schemas/user.schemas";
 import CODE from "../constants/code";
-import { SUCCESS, ERROR } from "../core/response/index";
-import { auth, USER_AUTH } from "../intercepror/auth";
+import { SUCCESS, ERROR } from "../helper/response";
+import { auth } from "../middleware/auth";
+import { USER_AUTH } from "../constants/user";
+import { validate } from "../middleware/validator";
 
 
 @controller({
@@ -18,7 +19,7 @@ class SessionController {
   ) {}
   
   @route('/config/sortList', 'put')
-  @auth(USER_AUTH.USER)
+  @use(auth(USER_AUTH.USER))
   modifySortConfig(req, res) {
     const { _id, remember } = req.user;
     const { sortList } = req.body;
@@ -42,7 +43,7 @@ class SessionController {
   }
 
   @route('/config', 'put')
-  @auth(USER_AUTH.USER)
+  @use(auth(USER_AUTH.USER))
   modifyUserConfig(req, res) {
     const { _id, remember } = req.user;
     const config = req.body;
@@ -66,7 +67,7 @@ class SessionController {
   }
 
   @route('/password', 'put')
-  @auth(USER_AUTH.USER)
+  @use(auth(USER_AUTH.USER))
   modifyPassword(req, res) {
     const { user, body } = req;
     const { oldPassword, password } = body;
@@ -98,7 +99,7 @@ class SessionController {
   }
 
   @route('/', 'post')
-  @validator(UserSchemas.login)
+  @use(validate(UserSchemas.login))
   login(req, res) {
     let {
       user, password, remember,
@@ -130,7 +131,7 @@ class SessionController {
   }
 
   @route('/', 'get')
-  @auth(USER_AUTH.USER)
+  @use(auth(USER_AUTH.USER))
   solve_auth(req, res) {
     let { user } = req;
     let { iat, exp, remember, ...other } = user;

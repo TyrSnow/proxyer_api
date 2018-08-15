@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "scripts": {
     "init": "cnpm install",
+    "prebuild": "rm -rf dist",
     "build": "tsc -p tsconfig.deploy.json",
-    "test": "set NODE_ENV=test&& nyc mocha -r ./node_modules/ts-node/register -r ./node_modules/source-map-support/register api/**/*.spec.ts",
+    "test": "set NODE_ENV=test&&set CLUSTER=disabled&& nyc mocha -r ./node_modules/ts-node/register -r ./node_modules/source-map-support/register api/**/*.spec.ts",
     "test-ci": "nyc npm test && nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "nyc": {
@@ -30,6 +31,7 @@
     "all": true
   },
   "dependencies": {
+    "@types/query-string": "^6.1.0",
     "@types/v8-profiler": "^0.0.5",
     "async": "^2.6.1",
     "body-parser": "^1.18.2",
@@ -40,6 +42,7 @@
     "log4js": "^2.3.11",
     "mongoose": "^5.0.15",
     "pinyin": "^2.8.3",
+    "query-string": "^6.1.0",
     "redis": "^2.8.0",
     "reflect-metadata": "^0.1.12",
     "stream-throttle": "^0.1.3",

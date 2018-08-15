@@ -1,4 +1,4 @@
-import { service } from "../core/injector";
+import { service } from "../core";
 import { SHARE_TYPE } from "../constants/share";
 import Share from "../models/Share";
 import CODE from "../constants/code";

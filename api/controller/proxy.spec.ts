@@ -102,7 +102,7 @@ describe('Test list and detail', () => {
   });
 });
 
-describe('Test pattern', () => {
+describe('Test create pattern', () => {
   let request;
   let token;
   let url;
@@ -119,7 +119,7 @@ describe('Test pattern', () => {
       .end((err, res) => {
         expect(err).not.exist;
         proxy_id = res.body.list[0]._id;
-        url = `/api/proxy/${proxy_id}/pattern`;
+        url = `/api/proxy/${proxy_id}/patterns`;
         done(err);
       })
   });
@@ -132,7 +132,7 @@ describe('Test pattern', () => {
       })
       .send({
         match: '/api',
-        server: '5b1667f95b54892440710d7d'
+        server: '1'
       })
       .expect(200)
       .end((err, res) => {
@@ -142,8 +142,7 @@ describe('Test pattern', () => {
       });
   });
 
-  
-  it('pass new host', (done) => {
+  it('pass no host', (done) => {
     request
       .post(url)
       .set({
@@ -151,16 +150,17 @@ describe('Test pattern', () => {
       })
       .send({
         match: '/api',
-        server: {
-          port: 888,
-          ip: '127.0.0.1',
-        },
       })
       .expect(200)
       .end((err, res) => {
         expect(err).not.exist;
-        expect(res.body.data._id).to.exist;
+        expect(res.body.data._id).to.equal(proxy_id);
+
         done(err);
       });
   });
+});
+
+describe('test get pattern detail', () => {
+
 });

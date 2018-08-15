@@ -1,6 +1,6 @@
 import { Document, Schema, Types } from 'mongoose';
-import { PATTERN_THROTTLE_TYPE } from "./../../constants/proxy";
-import { PROXY_STATUS } from "./../../constants/proxy";
+import { PATTERN_THROTTLE_TYPE, PATTERN_HANDLE_TYPE, PATTERN_MOCK_TYPE } from "../../constants/proxy";
+import { PROXY_STATUS } from "../../constants/proxy";
 import { UserModel } from '../User';
 import { METHOD } from '../../constants/http';
 
@@ -25,6 +25,7 @@ declare namespace ProxyModel {
   }
   
   interface PatternBase {
+    _id: any
     match?: string | RegExp
     allow_methods?: METHOD[]
     sort?: number
@@ -33,6 +34,10 @@ declare namespace ProxyModel {
     throttle?: PATTERN_THROTTLE_TYPE
     delay?: number
     speed?: number
+    handle?: number
+    mock_status?: string
+    mock_type?: PATTERN_MOCK_TYPE
+    mock_content?: string
   }
 
   interface PatternSchema extends PatternBase, Schema {}

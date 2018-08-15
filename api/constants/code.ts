@@ -61,6 +61,9 @@ const CODE = {
   // Share
   SHARE_NOT_EXIST: C(40000, '分享码已经失效或过期'),
   SHARE_EXPIRES: C(40001, '分享码已经过期'),
+
+  // 请求
+  REQUEST_NOT_EXIST: C(50404, '请求不存在或已经被删除'),
 };
 
 export default CODE;

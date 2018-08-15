@@ -1,10 +1,11 @@
-import { controller, route } from "../core/injector";
-import { auth, USER_AUTH } from "../intercepror/auth";
-import { SUCCESS, ERROR } from "../core/response";
+import { controller, route, use } from "../core";
+import { SUCCESS, ERROR } from "../helper/response";
 
 import ShareService from "../service/share";
-import UserService from "./../service/user";
+import UserService from "../service/user";
 import TokenService from "../service/token";
+import { auth } from "../middleware/auth";
+import { USER_AUTH } from "../constants/user";
 
 @controller({
   path: '/share',
@@ -17,7 +18,7 @@ class ShareController {
   ) {}
 
   @route('/', 'post')
-  @auth(USER_AUTH.USER)
+  @use(auth(USER_AUTH.USER))
   create_share(req, res) {
     const { _id } = req.user;
     const { share_type, payload } = req.body;

@@ -3,3 +3,8 @@ export enum STATE {
   INSTALLED,
   NORMAL,
 }
+
+export enum VALUE_TYPE {
+  STRING = 0,
+  NUMBER,
+}

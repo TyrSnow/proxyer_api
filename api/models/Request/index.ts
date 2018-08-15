@@ -3,6 +3,14 @@ import { RequestModel } from './index.d';
 
 let model = new mongoose.Schema({
   url: String,
+  realPath: String,
+  realHostname: String,
+  realPort: String,
+  parent: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Request',
+  },
+  query: String,
   params: Object,
   clientIp: String,
   headers: Object,
@@ -11,6 +19,7 @@ let model = new mongoose.Schema({
   status: Number,
   cost: Number,
   finished: Boolean,
+  mock: Boolean,
   requestContent: String,
   responseContent: String,
   responseHeaders: Object,

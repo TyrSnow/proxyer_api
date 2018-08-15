@@ -1,5 +1,5 @@
 import { Document } from 'mongoose';
-import { SHARE_TYPE } from "./../../constants/share";
+import { SHARE_TYPE } from "../../constants/share";
 
 declare namespace ShareModel {
   interface ShareInfo {

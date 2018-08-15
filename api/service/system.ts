@@ -1,4 +1,4 @@
-import { service } from "../core/injector";
+import { service } from "../core";
 
 @service()
 class SystemService {

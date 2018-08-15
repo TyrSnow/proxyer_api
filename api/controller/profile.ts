@@ -1,10 +1,12 @@
-import { controller, route } from "../core/injector";
+import { controller, route } from "../core";
 import ProfileService from "../service/profile";
-import { ERROR, SUCCESS, TEXT } from "../core/response";
-import { auth, USER_AUTH } from "../intercepror/auth";
+import { ERROR, SUCCESS, TEXT } from "../helper/response";
+import { auth } from "../middleware/auth";
+import { USER_AUTH } from "../constants/user";
 
 @controller({
-  path: '/profile'
+  path: '/profile',
+  // use: [auth(USER_AUTH.ADMIN)],
 })
 class ProfileController {
   constructor(
@@ -12,7 +14,6 @@ class ProfileController {
   ) {}
 
   @route('/', 'post')
-  @auth(USER_AUTH.USER)
   start(req, res) {
     const { time } = req.query;
     
@@ -24,7 +25,6 @@ class ProfileController {
   }
 
   @route('/')
-  @auth(USER_AUTH.USER)
   get(req, res) {
     const { profile } = req.query;
 

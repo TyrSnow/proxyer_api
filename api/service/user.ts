@@ -1,5 +1,5 @@
 import * as log4js from 'log4js';
-import { service } from "../core/injector";
+import { service } from "../core";
 import { UserModel } from "../models/User.d";
 import User from "../models/User.model";
 import { generate_sault, hash_password, valid_password } from "../tools/password";

@@ -15,6 +15,18 @@ export enum PATTERN_THROTTLE_TYPE {
   NONE = 0,
   SPEED,
   DELAY,
-  PAUSE,
-  DELAY_BLOCK,
+}
+
+export enum PATTERN_HANDLE_TYPE {
+  NONE = 0,
+  MOCK,
+  BLOCK,
+}
+
+export enum PATTERN_MOCK_TYPE {
+  JSON = 0,
+  HTML,
+  TEXT,
+  JSONP,
+  JS,
 }

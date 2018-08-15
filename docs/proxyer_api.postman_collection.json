@@ -1,0 +1,1458 @@
+{
+	"info": {
+		"name": "proxyer_api",
+		"_postman_id": "a77cbccf-53e1-e15c-1dfa-2c78328bcf2f",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "user",
+			"description": "",
+			"item": [
+				{
+					"name": "注册账户",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.json().data) {",
+									"    pm.globals.set(\"token\", pm.response.json().data.token);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"田宇\",\n\t\"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/users",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "session",
+			"description": "",
+			"item": [
+				{
+					"name": "登录",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.globals.set(\"token\", pm.response.json().data.token);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"user\": \"田宇\",\n\t\"password\": \"456123\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/session",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"session"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "当前用户资料",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.status === 200) {",
+									"    pm.globals.set(\"token\", pm.response.json().data.token);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"user\": \"田宇\",\n\t\"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/session",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"session"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "修改当前用户密码",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"if (pm.response.status === 200) {",
+									"    pm.globals.set(\"token\", pm.response.json().data.token);",
+									"}"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"oldPassword\": \"123456\",\n\t\"password\": \"456123\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/session/password",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"session",
+								"password"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "profile",
+			"description": "",
+			"item": [
+				{
+					"name": "开始profile",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.globals.set(\"profile_id\", pm.response.json().data);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/profile?time=10000",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "time",
+									"value": "10000",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "获取profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/profile?profile={{profile_id}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"profile"
+							],
+							"query": [
+								{
+									"key": "profile",
+									"value": "{{profile_id}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "proxy",
+			"description": "",
+			"item": [
+				{
+					"name": "pattern",
+					"description": "",
+					"item": [
+						{
+							"name": "获取模式列表",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/api/proxy/{{proxy_id}}/patterns",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"proxy",
+										"{{proxy_id}}",
+										"patterns"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "更新模式",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"match\": \"/a\"\n}"
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/api/proxy/{{proxy_id}}/patterns/5b5a963a36d79422286f1911",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"proxy",
+										"{{proxy_id}}",
+										"patterns",
+										"5b5a963a36d79422286f1911"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "添加代理模式",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"match\": \"/api\",\n\t\"server\": {\n\t\t\"target\": \"127.0.0.1:888\"\n\t}\n}"
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/api/proxy/{{proxy_id}}/patterns",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"proxy",
+										"{{proxy_id}}",
+										"patterns"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "获取模式详情",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/api/proxy/{{proxy_id}}/patterns/5b57e114415de40b78187b25",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"proxy",
+										"{{proxy_id}}",
+										"patterns",
+										"5b57e114415de40b78187b25"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "删除模式",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/api/proxy/{{proxy_id}}/patterns/5b22335e672c722880b43f56",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"proxy",
+										"{{proxy_id}}",
+										"patterns",
+										"5b22335e672c722880b43f56"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "host",
+					"description": "",
+					"item": [
+						{
+							"name": "获取目标服务器列表",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/api/proxy/5b1667b1e36fbc2b9c1646ca/hosts",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"proxy",
+										"5b1667b1e36fbc2b9c1646ca",
+										"hosts"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "获取目标服务器详情",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/api/proxy/5b1667b1e36fbc2b9c1646ca/hosts/5b1667f95b54892440710d7d",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"proxy",
+										"5b1667b1e36fbc2b9c1646ca",
+										"hosts",
+										"5b1667f95b54892440710d7d"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "设置默认服务器",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/api/proxy/5b1667b1e36fbc2b9c1646ca/hosts/5b1759998d085104d86ac6c9/active",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"proxy",
+										"5b1667b1e36fbc2b9c1646ca",
+										"hosts",
+										"5b1759998d085104d86ac6c9",
+										"active"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "删除目标服务器",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"port\": \"3\"\n}"
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/api/proxy/{{proxy_id}}/hosts/5b504ed7d0773407f8761ef6",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"proxy",
+										"{{proxy_id}}",
+										"hosts",
+										"5b504ed7d0773407f8761ef6"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "创建目标服务器",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"target\": \"127.0.0.1\"\n}"
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/api/proxy/5b1667b1e36fbc2b9c1646ca/hosts",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"proxy",
+										"5b1667b1e36fbc2b9c1646ca",
+										"hosts"
+									]
+								},
+								"description": null
+							},
+							"response": []
+						},
+						{
+							"name": "更新目标服务器",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"target\": \"127.0.0.1:8081\"\n}"
+								},
+								"url": {
+									"raw": "http://{{host}}:{{port}}/api/proxy/{{proxy_id}}/hosts/5b222f0c672c722880b43f51",
+									"protocol": "http",
+									"host": [
+										"{{host}}"
+									],
+									"port": "{{port}}",
+									"path": [
+										"api",
+										"proxy",
+										"{{proxy_id}}",
+										"hosts",
+										"5b222f0c672c722880b43f51"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				},
+				{
+					"name": "创建",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.globals.set(\"proxy_id\", pm.response.json().data._id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"测试5\",\n\t\"port\": 5001,\n\t\"proxyId\": \"5b57e25a415de40b78187b28\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/proxy",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"proxy"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "获取代理列表",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.globals.set(\"proxy_id\", pm.response.json().list[0]._id);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/proxy",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"proxy"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "获取代理详情",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/proxy/{{proxy_id}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"proxy",
+								"{{proxy_id}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "更新代理",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"port\": 4001\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/proxy/{{proxy_id}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"proxy",
+								"{{proxy_id}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "pattern",
+			"description": "",
+			"item": [
+				{
+					"name": "获取模式详情",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/patterns/5b1667f95b54892440710d7f",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"patterns",
+								"5b1667f95b54892440710d7f"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "更新模式",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"enable\": true\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/patterns/5b5a963a36d79422286f1911",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"patterns",
+								"5b5a963a36d79422286f1911"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "host",
+			"description": "",
+			"item": [
+				{
+					"name": "获取目标服务器详情",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/hosts/5b1667f95b54892440710d7d",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"hosts",
+								"5b1667f95b54892440710d7d"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "更新目标服务器",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"enable\": true\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/hosts/5b222f0c672c722880b43f51",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"hosts",
+								"5b222f0c672c722880b43f51"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "禁用目标服务器",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"port\": \"3\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/hosts/5b1667f95b54892440710d7d/disable",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"hosts",
+								"5b1667f95b54892440710d7d",
+								"disable"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "启用目标服务器",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"port\": \"3\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/hosts/5b1667f95b54892440710d7d/disable",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"hosts",
+								"5b1667f95b54892440710d7d",
+								"disable"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "删除目标服务器",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"port\": \"3\"\n}"
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/hosts/5b504ed7d0773407f8761ef6",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"hosts",
+								"5b504ed7d0773407f8761ef6"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ProxyNode",
+			"description": "",
+			"item": [
+				{
+					"name": "代理-获取代理详情",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:4001/api/proxy/{{proxy_id}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "4001",
+							"path": [
+								"api",
+								"proxy",
+								"{{proxy_id}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "代理-现金贷主页",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:4001/dev/index.html",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "4001",
+							"path": [
+								"dev",
+								"index.html"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "server",
+			"description": "",
+			"item": [
+				{
+					"name": "启动代理",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/server/{{proxy_id}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"server",
+								"{{proxy_id}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "重启",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/server/{{proxy_id}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"server",
+								"{{proxy_id}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "刷新代理配置",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/server/{{proxy_id}}/config",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"server",
+								"{{proxy_id}}",
+								"config"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "停止运行",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/server/{{proxy_id}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"server",
+								"{{proxy_id}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "获取代理状态",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/server/{{proxy_id}}",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"server",
+								"{{proxy_id}}"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "request",
+			"description": "",
+			"item": []
+		},
+		{
+			"name": "share",
+			"description": "",
+			"item": []
+		},
+		{
+			"name": "task",
+			"description": "",
+			"item": [
+				{
+					"name": "分析代理下经过的全部接口",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "http://{{host}}:{{port}}/api/task/analyse_proxy_interface?proxy_id=5b57e325415de40b78187b29",
+							"protocol": "http",
+							"host": [
+								"{{host}}"
+							],
+							"port": "{{port}}",
+							"path": [
+								"api",
+								"task",
+								"analyse_proxy_interface"
+							],
+							"query": [
+								{
+									"key": "proxy_id",
+									"value": "5b57e325415de40b78187b29",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

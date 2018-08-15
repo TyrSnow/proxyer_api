@@ -1,7 +1,7 @@
 import * as mongoose from 'mongoose';
 import Host from './Host';
 import { ProxyModel } from './index.d';
-import { PATTERN_THROTTLE_TYPE } from '../../constants/proxy';
+import { PATTERN_THROTTLE_TYPE, PATTERN_HANDLE_TYPE, PATTERN_MOCK_TYPE } from '../../constants/proxy';
 
 const Schema = mongoose.Schema;
 
@@ -17,6 +17,16 @@ const Pattern = <ProxyModel.PatternSchema>new Schema({
   },
   speed: Number,
   delay: Number,
+  handle: {
+    type: Number,
+    enum: PATTERN_HANDLE_TYPE,
+  },
+  mock_status: String,
+  mock_type: {
+    type: Number,
+    enum: PATTERN_MOCK_TYPE,
+  },
+  mock_content: String,
   server: {
     type: Schema.Types.ObjectId,
     ref: 'Host',

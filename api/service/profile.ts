@@ -1,8 +1,7 @@
-import { service } from "../core/injector";
+import { service } from "../core";
 import * as fs from 'fs';
 import * as path from 'path';
 import * as profiler from 'v8-profiler';
-import { ReadStream } from "fs";
 import { exists, readFile } from "../tools/fs";
 import CODE from "../constants/code";
 

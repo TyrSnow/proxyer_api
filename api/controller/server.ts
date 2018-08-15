@@ -1,8 +1,9 @@
-import { controller, route } from "../core/injector";
+import { controller, route, use } from "../core";
 import ProxyService from "../service/proxy";
-import ServerService from "../service/proxy.server";
-import { auth, USER_AUTH } from "../intercepror/auth";
-import { SUCCESS, ERROR } from "../core/response";
+import { SUCCESS, ERROR } from "../helper/response";
+import { auth } from "../middleware/auth";
+import { USER_AUTH } from "../constants/user";
+import ProxyAgent from "../agent/proxy";
 
 @controller({
   path: '/server',
@@ -10,11 +11,11 @@ import { SUCCESS, ERROR } from "../core/response";
 class ServerController {
   constructor(
     private proxyService: ProxyService,
-    private serverService: ServerService,
+    private serverService: ProxyAgent,
   ) {}
   
   @route('/:proxy_id', 'put')
-  @auth(USER_AUTH.USER)
+  @use(auth(USER_AUTH.USER))
   restart(req, res) {
     const { proxy_id } = req.params;
 
@@ -28,7 +29,7 @@ class ServerController {
   }
 
   @route('/:proxy_id', 'post')
-  @auth(USER_AUTH.USER)
+  @use(auth(USER_AUTH.USER))
   start(req, res) {
     // 启动一个代理服务器【需要注意已经启动的情况】
     const { proxy_id } = req.params;
@@ -45,7 +46,7 @@ class ServerController {
   }
   
   @route('/:proxy_id', 'delete')
-  @auth(USER_AUTH.USER)
+  @use(auth(USER_AUTH.USER))
   stop(req, res) {
     const { proxy_id } = req.params;
 

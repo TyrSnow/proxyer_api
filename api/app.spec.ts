@@ -7,6 +7,8 @@ import * as mongoose from 'mongoose';
 import App from './app';
 import { Server } from 'http';
 
+const port = process.env.TEST_ENV_PORT || 4000;
+
 let server: Server;
 let request;
 let token;
@@ -30,22 +32,30 @@ function createTestEnv(done) {
 
 before((done) => {
   let app = new App();
-  server = app.listen(3000, () => {
-    request = supertest.agent(server);
-    createTestEnv(done);
-  });
+  app.init();
+  request = supertest.agent(app.app);
+  createTestEnv(done);
+  // server = app.listen(port, (err) => {
+  //   if (err) {
+  //     done(err);
+  //     return;
+  //   }
+  //   console.log(server);
+  //   request = supertest.agent(server);
+  //   createTestEnv(done);
+  // });
 });
 
 after((done) => {
   console.log('All test specs complete');
-  server.close(() => {
+  // server.close(() => {
     mongoose.connection.db.dropDatabase(() => {
       mongoose.disconnect(() => {
         console.log('Env cleared');
         done();
       });
     });
-  });
+  // });
 });
 
 export function getRequest() {

@@ -1,10 +1,12 @@
-import { controller, route } from "../core/injector";
-import { auth, USER_AUTH } from "./../intercepror/auth";
+import { controller, route } from "../core";
 import HostService from "../service/host";
-import { SUCCESS, ERROR } from "../core/response";
+import { SUCCESS, ERROR } from "../helper/response";
+import { USER_AUTH } from "../constants/user";
+import { auth } from "../middleware/auth";
 
 @controller({
   path: '/hosts',
+  use: [auth(USER_AUTH.USER)],
 })
 class HostController {
   constructor(
@@ -12,7 +14,6 @@ class HostController {
   ) {}
   
   @route('/:host_id/disable', 'delete')
-  @auth(USER_AUTH.USER)
   enable_host(req, res) {
     const { host_id } = req.params;
     this.hostService.update_host_enable(host_id, true).then(
@@ -23,7 +24,6 @@ class HostController {
   }
   
   @route('/:host_id', 'delete')
-  @auth(USER_AUTH.USER)
   delete_host(req, res) {
     const { host_id } = req.params;
   
@@ -35,7 +35,6 @@ class HostController {
   }
 
   @route('/:host_id', 'put')
-  @auth(USER_AUTH.USER)
   update_host_detail(req, res) {
     const { host_id } = req.params;
 
@@ -47,7 +46,6 @@ class HostController {
   }
 
   @route('/:host_id/disable', 'post')
-  @auth(USER_AUTH.USER)
   disable_host(req, res) {
     const { host_id } = req.params;
     this.hostService.update_host_enable(host_id, false).then(
@@ -58,7 +56,6 @@ class HostController {
   }
 
   @route('/:host_id', 'get')
-  @auth(USER_AUTH.USER)
   get_host_detail(req, res) {
     const { host_id } = req.params;
 

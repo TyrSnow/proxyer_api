@@ -1,6 +1,6 @@
 import * as log4js from 'log4js';
 import * as jwt from 'jsonwebtoken';
-import { service } from "../core/injector";
+import { service } from "../core";
 
 import config from '../config';
 

@@ -1,15 +1,16 @@
-import { service } from "../core/injector";
+import { service } from "../core";
 import ProxyService from './proxy';
 import { ProxyModel } from "../models/Proxy/index.d";
 import updateSubDoc from "../tools/updateSubDoc";
 import { Regs } from "../constants/reg";
-import ProxyServerService from "./proxy.server";
+import CODE from "../constants/code";
+import ProxyAgent from "../agent/proxy";
 
 @service()
 class PatternService {
   constructor(
     private proxyService: ProxyService,
-    private serverService: ProxyServerService,
+    private serverService: ProxyAgent,
   ) {}
 
   private get_proxy_by_pattern_id(
@@ -94,7 +95,10 @@ class PatternService {
   ) {
     let pattern = proxy.patterns.id(pattern_id);
     // TODO: 特殊处理server字段
-    updateSubDoc(pattern, data, ['enable', 'pause', 'match', 'allow_methods', 'server', 'throttle', 'speed', 'delay']);
+    updateSubDoc(pattern, data, [
+      'enable', 'pause', 'match', 'allow_methods', 'server', 'throttle', 'speed', 'delay',
+      'handle', 'mock_status', 'mock_type', 'mock_content',
+    ]);
     return proxy.save().then(newProxy => {
       this.serverService.update_config(proxy._id.toHexString(), newProxy);
       return Promise.resolve(newProxy);
@@ -126,13 +130,39 @@ class PatternService {
       return Promise.resolve(newProxy);
     });
   }
+  
+  valid_pattern_host(
+    proxy: ProxyModel.Proxy,
+    pattern: ProxyModel.PatternBase,
+  ) {
+    let { server } = pattern;
+    if (!server) {
+      return true;
+    }
+    return !!proxy.hosts.id(server as string);
+  }
 
   create_pattern(
     data: ProxyModel.PatternBase,
     proxy_id: string,
   ) {
     return this.proxyService.get_selective(proxy_id).then(proxy => {
-      return this.create_proxy_pattern(proxy, data);
+      if (this.valid_pattern_host(proxy, data)) {
+        return this.create_proxy_pattern(proxy, data);
+      }
+      return Promise.reject(CODE.HOST_NOT_EXIST);
+    });
+  }
+  
+  delete_pattern_from_proxy(
+    proxy: ProxyModel.Proxy,
+    pattern_id: string,
+  ) {
+    let pattern = proxy.patterns.id(pattern_id);
+    pattern.remove();
+    return proxy.save().then(newProxy => {
+      this.serverService.update_config(proxy._id.toHexString(), newProxy);
+      return Promise.resolve(newProxy);
     });
   }
 
@@ -140,15 +170,13 @@ class PatternService {
     pattern_id: string,
     proxy_id?: string,
   ) {
+    if (proxy_id) {
+      return this.proxyService.get_selective(proxy_id).then(
+        proxy => this.delete_pattern_from_proxy(proxy, pattern_id),
+      );
+    }
     return this.get_proxy_by_pattern_id(pattern_id).then(
-      proxy => {
-        let pattern = proxy.patterns.id(pattern_id);
-        pattern.remove();
-        return proxy.save().then(newProxy => {
-          this.serverService.update_config(proxy._id.toHexString(), newProxy);
-          return Promise.resolve(newProxy);
-        });
-      }
+      proxy => this.delete_pattern_from_proxy(proxy, pattern_id),
     );
   }
 }

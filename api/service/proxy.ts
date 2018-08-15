@@ -1,19 +1,17 @@
-import { service } from "../core/injector";
+import { service } from "../core";
 import Proxy from "../models/Proxy";
 import { ProxyModel } from "../models/Proxy/index.d";
 import CODE from "../constants/code";
 import { page } from "../models/helper";
 import mask_object from "../tools/maskObject";
-import { portIsOccupied } from "./../tools/proxy.util";
-import { fork } from 'child_process';
-import ProxyServerService from "./proxy.server";
 import { PROXY_STATUS } from "../constants/proxy";
+import ProxyAgent from "../agent/proxy";
 
 @service()
 class ProxyService {
   private proxys = new Map();
   constructor(
-    private serverService: ProxyServerService,
+    private serverService: ProxyAgent,
   ) {}
 
   /**
@@ -140,6 +138,24 @@ class ProxyService {
       return Promise.reject(err);
     });
   }
+  
+  /**
+   * 更新代理服务器状态
+   */
+  update_proxy_status(
+    proxy_id: string,
+    status: PROXY_STATUS,
+  ) {
+    return Proxy.findByIdAndUpdate(proxy_id, {
+      status,
+    }).then((effected) => {
+      if (effected) {
+        return Promise.resolve();
+      }
+
+      return Promise.reject(CODE.PROXY_NOT_EXIST);
+    });
+  }
 
   /**
    * 单独更新某个字段（慎用）
@@ -151,7 +167,10 @@ class ProxyService {
   ) {
     return this.get_selective(proxy_id).then(proxy => {
       proxy.set(key, data);
-      return proxy.save();
+      return proxy.save().then(proxyNew => {
+        this.serverService.update_config(proxy_id, proxyNew);
+        return Promise.resolve(proxyNew);
+      });
     });
   }
   
@@ -234,6 +253,12 @@ class ProxyService {
       }
       return Promise.reject(CODE.PROXY_NOT_EXIST);
     });
+  }
+
+  count_query(
+    query: any,
+  ) {
+    return Proxy.count(query);
   }
 }
 

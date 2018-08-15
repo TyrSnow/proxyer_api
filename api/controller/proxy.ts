@@ -1,13 +1,15 @@
-import { controller, route } from "../core/injector";
+import { controller, route } from "../core";
 import HostService from "./../service/host";
-import { auth, USER_AUTH } from "./../intercepror/auth";
 import ProxyService from "../service/proxy";
-import { SUCCESS, ERROR, LIST } from "../core/response";
+import { SUCCESS, ERROR, LIST } from "../helper/response";
 import PatternService from "../service/pattern";
 import CODE from "../constants/code";
+import { auth } from "../middleware/auth";
+import { USER_AUTH } from "../constants/user";
 
 @controller({
   path: '/proxy',
+  use: [auth(USER_AUTH.USER)],
 })
 class ProxyController {
   constructor(
@@ -17,7 +19,6 @@ class ProxyController {
   ) {}
 
   @route('/:proxy_id/hosts/:host_id', 'put')
-  @auth(USER_AUTH.USER)
   update_host(req, res) {
     const { proxy_id, host_id } = req.params;
     
@@ -27,9 +28,8 @@ class ProxyController {
       ERROR(req, res),
     );
   }
-
+  
   @route('/:proxy_id/patterns/:pattern_id', 'put')
-  @auth(USER_AUTH.USER)
   update_pattern(req, res) {
     // 变更模式参数
     const { proxy_id, pattern_id } = req.params;
@@ -41,8 +41,19 @@ class ProxyController {
     );
   }
 
+  @route('/:proxy_id/patterns', 'put')
+  update_patterns(req, res) {
+    const { proxy_id } = req.params;
+    const { patterns } = req.body;
+
+    this.proxyService.update_proxy_attr(proxy_id, 'patterns', patterns).then(
+      SUCCESS(req, res),
+    ).catch(
+      ERROR(req, res),
+    );
+  }
+
   @route('/:proxy_id', 'put')
-  @auth(USER_AUTH.USER)
   update_proxy(req, res) {
     const { proxy_id } = req.params;
 
@@ -54,7 +65,6 @@ class ProxyController {
   }
   
   @route('/:proxy_id/hosts/:host_id/active', 'post')
-  @auth(USER_AUTH.USER)
   set_host_default(req, res) {
     const { host_id, proxy_id } = req.params;
 
@@ -66,7 +76,6 @@ class ProxyController {
   }
 
   @route('/:proxy_id/patterns', 'post')
-  @auth(USER_AUTH.USER)
   create_pattern(req, res) {
     // 添加一个模式
     const { proxy_id } = req.params;
@@ -79,7 +88,6 @@ class ProxyController {
   }
 
   @route('/:proxy_id/hosts', 'post')
-  @auth(USER_AUTH.USER)
   create_host(req, res) {
     const { proxy_id } = req.params;
 
@@ -91,7 +99,6 @@ class ProxyController {
   }
 
   @route('/', 'post')
-  @auth(USER_AUTH.USER)
   create(req, res) {
     // 创建一个新的代理
     const { name, port, proxyId } = req.body;
@@ -128,7 +135,6 @@ class ProxyController {
   }
     
   @route('/:proxy_id/hosts/:host_id', 'get')
-  @auth(USER_AUTH.USER)
   get_host_detail(req, res) {
     const { proxy_id, host_id } = req.params;
   
@@ -140,7 +146,6 @@ class ProxyController {
   }
 
   @route('/:proxy_id/hosts', 'get')
-  @auth(USER_AUTH.USER)
   list_hosts(req, res) {
     const { proxy_id } = req.params;
   
@@ -152,7 +157,6 @@ class ProxyController {
   }
 
   @route('/:proxy_id/patterns/:pattern_id')
-  @auth(USER_AUTH.USER)
   get_pattern_detail(req, res) {
     // 获取模式详情
     const { proxy_id, pattern_id } = req.params;
@@ -165,7 +169,6 @@ class ProxyController {
   }
 
   @route('/:proxy_id/patterns', 'get')
-  @auth(USER_AUTH.USER)
   list_proxy_patterns(req, res) {
     const { proxy_id } = req.params;
 
@@ -177,7 +180,6 @@ class ProxyController {
   }
 
   @route('/:proxy_id', 'get')
-  @auth(USER_AUTH.USER)
   detail(req, res) {
     // 获取代理详情
     const { proxy_id } = req.params;
@@ -190,7 +192,6 @@ class ProxyController {
   }
 
   @route('/')
-  @auth(USER_AUTH.USER)
   list(req, res) {
     const { current, size, all } = req.query;
     
@@ -209,7 +210,6 @@ class ProxyController {
   }
 
   @route('/:proxy_id/patterns/:pattern_id', 'delete')
-  @auth(USER_AUTH.USER)
   delelte_pattern(req, res) {
     const { proxy_id, pattern_id } = req.params;
 
@@ -221,7 +221,6 @@ class ProxyController {
   }
 
   @route('/:proxy_id/hosts/:host_id', 'delete')
-  @auth(USER_AUTH.USER)
   delete_host(req, res) {
     const { proxy_id, host_id } = req.params;
 
@@ -233,7 +232,6 @@ class ProxyController {
   }
 
   @route('/:proxy_id', 'delete')
-  @auth(USER_AUTH.USER)
   delete_proxy(req, res) {
     const { proxy_id } = req.params;
     const { _id, auth } = req.user;

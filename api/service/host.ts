@@ -1,18 +1,17 @@
-import { service } from "../core/injector";
-import { create } from "./../core/injector/factor";
+import { service } from "../core";
 import ProxyService from "./proxy";
 import Proxy from '../models/Proxy';
 import { ProxyModel } from "../models/Proxy/index.d";
 import mask_object from "../tools/maskObject";
 import updateSubDoc from "../tools/updateSubDoc";
 import CODE from "../constants/code";
-import ProxyServerService from "./proxy.server";
+import ProxyAgent from "../agent/proxy";
 
 @service()
 class HostService {
   constructor(
     private proxyService: ProxyService,
-    private serverService: ProxyServerService,
+    private serverService: ProxyAgent,
   ) {}
   
   private get_proxy_by_host(

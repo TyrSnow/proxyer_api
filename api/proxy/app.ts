@@ -4,6 +4,7 @@ import { ProxyModel } from '../models/Proxy/index.d';
 import * as url from 'url';
 import ProxyRequest from './Request';
 import { METHOD_MAP } from '../constants/http';
+import { PATTERN_HANDLE_TYPE } from '../constants/proxy';
 
 export default class App {
   static generate_match_reg(match: string) {
@@ -36,8 +37,6 @@ export default class App {
       }
       return pattern;
     });
-  
-    console.log(JSON.stringify(this.patterns));
 
     // 补充host的protocal，并解析host的target
     this.hosts = config.hosts.map(host => {
@@ -101,9 +100,9 @@ export default class App {
   }
   
   block(payload) {
-    let { id, status } = payload;
-    let request = this.requestMap.get(id);
-    request.block(status);
+    // let { id, status } = payload;
+    // let request = this.requestMap.get(id);
+    // request.block(status);
   }
 
   listen(port) {

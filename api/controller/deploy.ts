@@ -1,4 +1,4 @@
-import { controller, route } from "../core/injector";
+import { controller, route } from "../core";
 
 @controller({
   path: '/',

@@ -27,10 +27,12 @@ process.on('message', (message) => {
     app[message.func](message);
   }
 });
+
 process.on('uncaughtException', (e) => {
   console.debug('UncaughtException: ', e);
   process.exit(1);
-})
+});
+
 app.listen(params.port);
 
 
