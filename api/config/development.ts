@@ -17,7 +17,7 @@ const config = {
         type: 'console'
       },
       app: {
-        type: 'datefile',
+        type: 'dateFile',
         filename: 'logs/access.log',
         pattern: '.yyyy-MM-dd-hh.log',
         alwaysIncludePattern: true,
@@ -25,7 +25,7 @@ const config = {
         backups: 4
       },
       error: {
-        type: 'datefile',
+        type: 'dateFile',
         filename: 'logs/error.log',
         pattern: '.yyyy-MM-dd.log',
         alwaysIncludePattern: true,
@@ -33,7 +33,7 @@ const config = {
         backups: 4
       },
       proxy: {
-        type: 'datefile',
+        type: 'dateFile',
         filename: 'logs/proxy',
         pattern: '.yyyy-MM-dd.log',
         alwaysIncludePattern: true,

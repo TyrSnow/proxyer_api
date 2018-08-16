@@ -14,7 +14,7 @@ const config = {
   log: {
     appenders: {
       app: {
-        type: 'datefile',
+        type: 'dateFile',
         filename: 'logs/access',
         patterm: '.yyyy-MM-dd-hh.log',
         alwaysIncludePattern: true,
@@ -22,7 +22,7 @@ const config = {
         backups: 4
       },
       error: {
-        type: 'datefile',
+        type: 'dateFile',
         filename: 'logs/error',
         patterm: '.yyyy-MM-dd.log',
         alwaysIncludePattern: true,
@@ -30,7 +30,7 @@ const config = {
         backups: 4
       },
       proxy: {
-        type: 'datefile',
+        type: 'dateFile',
         filename: 'logs/proxy',
         pattern: '.yyyy-MM-dd.log',
         alwaysIncludePattern: true,
