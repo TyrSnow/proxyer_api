@@ -28,7 +28,15 @@ const config = {
         alwaysIncludePattern: true,
         maxLogSize: 1024,
         backups: 4
-      }
+      },
+      proxy: {
+        type: 'datefile',
+        filename: 'logs/proxy',
+        pattern: '.yyyy-MM-dd.log',
+        alwaysIncludePattern: true,
+        maxLogSize: 1024,
+        backups: 4
+      },
     },
     categories: {
       default: {
@@ -38,7 +46,11 @@ const config = {
       error: {
         appenders: ['error'],
         level: 'debug'
-      }
+      },
+      proxy: {
+        appenders: ['proxy'],
+        level: 'error',
+      },
     },
     replaceConsole: true
   }

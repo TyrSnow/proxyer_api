@@ -1,0 +1,17 @@
+sudo: true
+language: node_js
+node_js:
+  - '8'
+cache: yarn
+addons:
+  apt:
+    packages:
+      - sshpass
+services:
+  - mongodb
+install:
+  - npm i npminstall && npminstall
+before_script:
+  - npm run test-ci
+script:
+  - npm run build

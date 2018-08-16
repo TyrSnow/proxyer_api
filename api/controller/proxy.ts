@@ -1,4 +1,4 @@
-import { controller, route } from "../core";
+import { controller, route, use } from "../core";
 import HostService from "./../service/host";
 import ProxyService from "../service/proxy";
 import { SUCCESS, ERROR, LIST } from "../helper/response";
@@ -6,6 +6,8 @@ import PatternService from "../service/pattern";
 import CODE from "../constants/code";
 import { auth } from "../middleware/auth";
 import { USER_AUTH } from "../constants/user";
+import { validate } from "../middleware/validator";
+import ProxySchemas from "../schemas/proxy.schemas";
 
 @controller({
   path: '/proxy',
@@ -99,6 +101,7 @@ class ProxyController {
   }
 
   @route('/', 'post')
+  @use(validate(ProxySchemas.create))
   create(req, res) {
     // 创建一个新的代理
     const { name, port, proxyId } = req.body;

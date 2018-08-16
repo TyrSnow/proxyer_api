@@ -26,7 +26,7 @@ const config = {
         appenders: ['out'],
         level: 'ERROR'
       }
-    }
+    },
   }
 }
 

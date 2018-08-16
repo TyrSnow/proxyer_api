@@ -71,11 +71,12 @@ class ProxyService {
   ): Promise<ProxyModel.Proxy>  {
     return Proxy.findById(proxy_id).populate('creator', '_id name head').then((res) => {
       if (res) {
-        let status = this.serverService.syncStatus(proxy_id);
-        let resObj = res.toObject();
-        resObj.status = status;
-
-        return Promise.resolve(resObj);
+        return this.serverService.status(proxy_id).then(status => {
+          let resObj = res.toObject();
+          resObj.status = status;
+  
+          return Promise.resolve(resObj);
+        });
       }
       return Promise.reject(CODE.PROXY_NOT_EXIST);
     });
@@ -109,20 +110,10 @@ class ProxyService {
     });
   }
   
-  /**
-   * 更新代理服务器的name、desc、port属性
-   */
-  update_proxy(
+  update_proxy_detail(
     proxy_id: string,
     data: any,
   ) {
-    if (data.port) { // 检查状态
-      let status = this.serverService.syncStatus(proxy_id);
-      if (status === PROXY_STATUS.RUNNING) {
-        return Promise.reject(CODE.RUNNING_PROXY_PORT_CANNOT_CHANGE);
-      }
-    }
-
     return Proxy.findOneAndUpdate({
       _id: proxy_id,
     }, mask_object(data, ['name', 'desc', 'port']), {
@@ -137,6 +128,25 @@ class ProxyService {
       }
       return Promise.reject(err);
     });
+  }
+  /**
+   * 更新代理服务器的name、desc、port属性
+   */
+  update_proxy(
+    proxy_id: string,
+    data: any,
+  ) {
+    if (data.port) { // 检查状态
+      return this.serverService.status(proxy_id).then(status => {
+        if (status === PROXY_STATUS.RUNNING) {
+          return Promise.reject(CODE.RUNNING_PROXY_PORT_CANNOT_CHANGE);
+        }
+
+        return this.update_proxy_detail(proxy_id, data);
+      });
+    }
+
+    return this.update_proxy_detail(proxy_id, data);
   }
   
   /**
@@ -191,7 +201,10 @@ class ProxyService {
           host.set('active', undefined);
         });
         acHost.set('active', true);
-        return proxy.save().then(proxy => Promise.resolve(proxy.hosts));
+        return proxy.save().then(newProxy => {
+          this.serverService.update_config(proxy_id, newProxy);
+          return Promise.resolve(newProxy.hosts);
+        });
       }
       return Promise.reject(CODE.HOST_NOT_EXIST);
     });

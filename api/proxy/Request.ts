@@ -68,6 +68,7 @@ class ProxyRequest {
   private responseHeaders: any;
   private startTime: number;
   private cost: number;
+  private proxyErr: boolean;
 
   constructor(
     private req: any,
@@ -87,7 +88,6 @@ class ProxyRequest {
     this.realPort = host.port;
 
     this.log();
-
     this.throttle();
   }
   
@@ -157,13 +157,14 @@ class ProxyRequest {
   proxy_through(req, res) {
     let { pattern } = this;
     let { host }= this;
-    let { method, headers, hostname } = this.req;
+    let { method, headers, hostname, path, port } = this.req;
+    const { changeOrigin } = host;
     let option = ProxyRequest.change_origin({
       method,
       headers: Object.assign({}, headers),
-      path: this.realPath,
-      hostname: this.realHostname,
-      port: this.realPort,
+      path: changeOrigin ? this.realPath : path,
+      hostname: changeOrigin ? this.realHostname : hostname,
+      port: changeOrigin ? this.realPort : port,
     }, host);
 
     let nReq = http.request(option, (nRes) => {
@@ -173,13 +174,26 @@ class ProxyRequest {
         this.responseContent+= data;
       }).on('end', () => {
         this.proxy_end();
-      }).on('error', () => {
+      }).on('error', (err) => {
+        console.error('proxy response error: ', err);
+        this.res.writeHead(nRes.statusCode, nRes.headers);
+        this.res.write(JSON.stringify(err));
+        this.responseContent = JSON.stringify(err);
         this.proxy_end();
       }).pipe(res);
-    }).on('error', (e) => {
+    }).on('error', (err) => {
+      console.error('proxy request error: ', err);
+      const errStr = JSON.stringify(err);
+      const headers = ProxyRequest.get_mock_headers(PATTERN_MOCK_TYPE.JSON, errStr);
+      this.res.writeHead(502, headers);
+      this.res.write(errStr);
       this.res.end();
+      this.responseHeaders = headers;
+      this.responseContent = errStr;
+      this.proxyErr = true;
+      this.proxy_end();
     });
-
+  
     req.on('data', (data) => {
       this.requestContent+= data;
     }).pipe(nReq);
@@ -222,6 +236,7 @@ class ProxyRequest {
       responseHeaders: this.responseHeaders,
       requestContent: this.requestContent,
       pattern: this.pattern ? this.pattern._id : undefined,
+      proxyErr: this.proxyErr,
     };
   }
 }

@@ -1,0 +1,1 @@
+{"options":{},"indexes":[{"v":2,"key":{"_id":1},"name":"_id_","ns":"test_proxyer.interfaces"},{"v":2,"unique":true,"key":{"proxy":1,"url":1,"method":1},"name":"proxy_1_url_1_method_1","ns":"test_proxyer.interfaces","background":true}]}

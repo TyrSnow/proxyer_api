@@ -1,2 +1,2 @@
 # proxyer_api
-proxyer项目服务端。
+[![Build Status](https://www.travis-ci.org/TyrSnow/proxyer_api.svg?branch=develop)](https://www.travis-ci.org/TyrSnow/proxyer_api)

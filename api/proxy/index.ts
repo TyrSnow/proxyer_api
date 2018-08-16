@@ -32,12 +32,11 @@ export default class ProxyNode {
           this.exit_code = code;
           this.status = PROXY_STATUS.ERROR;
         }
-        if (resolved) {
-          reject(CODE.PROXY_START_ERROR);
+        if (!resolved) {
+          resolved = true;
+          reject(this.status);
         }
-      });
-
-      this.node.on('message', (message) => {
+      }).on('message', (message) => {
         if (typeof message === 'string') {
           switch(message) {
             case 'START_SUCCESS':
@@ -52,12 +51,14 @@ export default class ProxyNode {
               }
               break;
             default:
-              console.log('Unknow message: ', message);
+              console.debug('Unknow message: ', message);
           }
           return;
         }
         // 更新日志
         this.logger.log(this.proxy._id, message);
+      }).on('error', (err) => {
+        console.error('start error: ', err);
       });
     });
   }

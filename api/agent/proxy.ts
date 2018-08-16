@@ -18,7 +18,11 @@ class ProxyAgent {
     proxy: ProxyModel.Proxy
   ) {
     let server = this.servers.get(proxy_id);
-    if (!server) {
+    if (
+      (!server) ||
+      (server.status === PROXY_STATUS.ERROR) ||
+      (server.status === PROXY_STATUS.STOP)
+    ) {
       server = new ProxyNode(proxy, this.logger);
       this.servers.set(proxy_id, server);
       return server.start();
@@ -52,7 +56,12 @@ class ProxyAgent {
     console.debug('Will update config: ', proxy_id);
     let server = this.servers.get(proxy_id);
     if (server) {
-      return server.update_config(config);
+      if (
+        (server.status !== PROXY_STATUS.ERROR) &&
+        (server.status !== PROXY_STATUS.STOP)
+      ) {
+        return server.update_config(config);
+      }
     }
 
     return Promise.resolve(CODE.SUCCESS);
@@ -69,13 +78,7 @@ class ProxyAgent {
     return this.start(proxy_id, proxy);
   }
 
-  status(
-    proxy_id: string,
-  ) {
-    return Promise.resolve(this.syncStatus(proxy_id));
-  }
-
-  syncStatus(
+  private syncStatus(
     proxy_id: string,
   ): PROXY_STATUS {
     let server = this.servers.get(proxy_id);
@@ -83,6 +86,12 @@ class ProxyAgent {
       return server.status;
     }
     return PROXY_STATUS.STOP;
+  }
+
+  status(
+    proxy_id: string,
+  ) {
+    return Promise.resolve(this.syncStatus(proxy_id));
   }
 }
 

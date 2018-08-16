@@ -18,20 +18,28 @@ const config = {
       },
       app: {
         type: 'datefile',
-        filename: 'logs/access',
-        patterm: '.yyyy-MM-dd-hh.log',
+        filename: 'logs/access.log',
+        pattern: '.yyyy-MM-dd-hh.log',
         alwaysIncludePattern: true,
         maxLogSize: 1024,
         backups: 4
       },
       error: {
         type: 'datefile',
-        filename: 'logs/error',
-        patterm: '.yyyy-MM-dd.log',
+        filename: 'logs/error.log',
+        pattern: '.yyyy-MM-dd.log',
         alwaysIncludePattern: true,
         maxLogSize: 1024,
         backups: 4
-      }
+      },
+      proxy: {
+        type: 'datefile',
+        filename: 'logs/proxy',
+        pattern: '.yyyy-MM-dd.log',
+        alwaysIncludePattern: true,
+        maxLogSize: 1024,
+        backups: 4
+      },
     },
     categories: {
       default: {
@@ -45,7 +53,13 @@ const config = {
           'out', 'error'
         ],
         level: 'debug'
-      }
+      },
+      proxy: {
+        appenders: [
+          'out', 'proxy',
+        ],
+        level: 'debug',
+      },
     },
     replaceConsole: true
   }

@@ -13,9 +13,9 @@ export class ClusterWorker {
 
   private middlewares: any[] = [];
   private errors: any[] = [];
-  private app = express();
   private config: any;
 
+  public app = express();
   constructor(
     config,
   ) {

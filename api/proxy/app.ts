@@ -4,7 +4,6 @@ import { ProxyModel } from '../models/Proxy/index.d';
 import * as url from 'url';
 import ProxyRequest from './Request';
 import { METHOD_MAP } from '../constants/http';
-import { PATTERN_HANDLE_TYPE } from '../constants/proxy';
 
 export default class App {
   static generate_match_reg(match: string) {
@@ -111,6 +110,7 @@ export default class App {
       .on('request', this.handle_request.bind(this))
       .listen(port, '0.0.0.0', (err) => {
         if (err) {
+          console.error('proxy start error: ', err);
           process.exit(1);
           return;
         }

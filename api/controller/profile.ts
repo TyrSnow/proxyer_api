@@ -6,7 +6,7 @@ import { USER_AUTH } from "../constants/user";
 
 @controller({
   path: '/profile',
-  // use: [auth(USER_AUTH.ADMIN)],
+  use: [auth(USER_AUTH.ADMIN)],
 })
 class ProfileController {
   constructor(
