@@ -10,7 +10,7 @@ import { users } from './constants/test';
 import { USER_AUTH } from './constants/user';
 
 const port = process.env.TEST_ENV_PORT || 4000;
-
+console.log(process.env);
 let server: Server;
 let request;
 let token;
