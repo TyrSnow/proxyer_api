@@ -35,7 +35,6 @@ class App extends Application {
       });
     }
   ];
-
 }
 
 export default App;

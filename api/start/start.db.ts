@@ -5,7 +5,6 @@ let logger = log4js.getLogger('default');
 import config from '../config';
 
 mongoose.connect(config.db.uri, {
-  poolSize: 0,
   autoReconnect: false,
 });
 

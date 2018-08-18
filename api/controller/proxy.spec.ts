@@ -22,7 +22,7 @@ describe('Test create', () => {
       .post('/api/proxy')
       .expect(401)
       .end((err, res) => {
-        done();
+        done(err);
       });
   });
 
@@ -93,7 +93,7 @@ describe('Test create', () => {
         .end((err, res) => { // 新的proxy应该包含patterns
           expect(err).not.exist;
           res.body.data.patterns.map((pattern, index) => {
-            expect(pattern._id).to.equal(proxys[0].patterns[index]._id);
+            expect(pattern._id).not.equal(proxys[0].patterns[index]._id);
             expect(pattern.match).to.equal(proxys[0].patterns[index].match);
             expect(pattern.enable).to.equal(proxys[0].patterns[index].enable);
           });
@@ -129,7 +129,7 @@ describe('Test list and detail', () => {
         expect(err).not.exist;
         expect(res.body.list).to.exist;
         list = res.body.list;
-        proxy_id = list[0]._id;
+        proxy_id = proxys[0]._id;
         expect(res.body.page).to.exist;
         expect(res.body.list.filter(proxy => proxy.name === TEST_PROXY_NAME).length).to.equal(1);
         done(err);
@@ -138,14 +138,14 @@ describe('Test list and detail', () => {
 
   it('should return detail', (done) => {
     request
-      .get(`/api/proxy/${list[0]._id}`)
+      .get(`/api/proxy/${proxys[0]._id}`)
       .set({
         authorization: token,
       })
       .expect(200)
       .end((err, res) => {
         expect(err).not.exist;
-        expect(res.body.data._id).to.equal(list[0]._id);
+        expect(res.body.data._id).to.equal(proxys[0]._id);
         done(err);
       });
   });

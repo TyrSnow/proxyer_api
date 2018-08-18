@@ -36,6 +36,10 @@ class ProxyRequest {
     return path;
   }
 
+  static change_referer(option: any, host: HostOption) {
+
+  }
+
   static change_origin(option: any, host: HostOption) {
     if (host.changeOrigin) {
       option.headers.host = host.hostname;

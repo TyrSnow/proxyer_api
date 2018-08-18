@@ -19,7 +19,10 @@ class ProxyController {
     private patternService: PatternService,
     private hostService: HostService,
   ) {}
-
+  
+  /**
+   * 修改一个host的参数
+   */
   @route('/:proxy_id/hosts/:host_id', 'put')
   update_host(req, res) {
     const { proxy_id, host_id } = req.params;
@@ -31,6 +34,9 @@ class ProxyController {
     );
   }
   
+  /**
+   * 修改匹配模式的参数
+   */
   @route('/:proxy_id/patterns/:pattern_id', 'put')
   update_pattern(req, res) {
     // 变更模式参数
@@ -42,7 +48,10 @@ class ProxyController {
       ERROR(req, res),
     );
   }
-
+  
+  /**
+   * 修改代理下所有的匹配模式
+   */
   @route('/:proxy_id/patterns', 'put')
   update_patterns(req, res) {
     const { proxy_id } = req.params;
@@ -54,7 +63,10 @@ class ProxyController {
       ERROR(req, res),
     );
   }
-
+  
+  /**
+   * 修改代理资料
+   */
   @route('/:proxy_id', 'put')
   update_proxy(req, res) {
     const { proxy_id } = req.params;
@@ -66,6 +78,9 @@ class ProxyController {
     );
   }
   
+  /**
+   * 设置默认host地址
+   */
   @route('/:proxy_id/hosts/:host_id/active', 'post')
   set_host_default(req, res) {
     const { host_id, proxy_id } = req.params;
@@ -77,6 +92,9 @@ class ProxyController {
     );
   }
 
+  /**
+   * 创建一个匹配模式
+   */
   @route('/:proxy_id/patterns', 'post')
   create_pattern(req, res) {
     // 添加一个模式
@@ -88,7 +106,10 @@ class ProxyController {
       ERROR(req, res),
     );
   }
-
+  
+  /**
+   * 创建一个host
+   */
   @route('/:proxy_id/hosts', 'post')
   create_host(req, res) {
     const { proxy_id } = req.params;
@@ -99,7 +120,10 @@ class ProxyController {
       ERROR(req, res),
     );
   }
-
+  
+  /**
+   * 创建一个代理
+   */
   @route('/', 'post')
   @use(validate(ProxySchemas.create))
   create(req, res) {
@@ -136,7 +160,10 @@ class ProxyController {
       ERROR(req, res),
     );
   }
-    
+  
+  /**
+   * 获得host详情
+   */
   @route('/:proxy_id/hosts/:host_id', 'get')
   get_host_detail(req, res) {
     const { proxy_id, host_id } = req.params;
@@ -148,6 +175,9 @@ class ProxyController {
     );
   }
 
+  /**
+   * 获得代理下的hosts列表
+   */
   @route('/:proxy_id/hosts', 'get')
   list_hosts(req, res) {
     const { proxy_id } = req.params;
