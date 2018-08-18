@@ -6,8 +6,8 @@
     "prebuild": "rm -rf dist",
     "build": "tsc -p tsconfig.deploy.json",
     "pretest": "mongorestore -d test_proxyer db/dump/test_proxyer --drop",
-    "test": "crossenv NODE_ENV=test CLUSTER=disabled nyc mocha -t 10000 -r ./node_modules/ts-node/register -r ./node_modules/source-map-support/register api/**/*.spec.ts",
-    "test-ci": "crossenv NODE_ENV=test CLUSTER=disabled nyc npm test && nyc report --reporter=text-lcov > coverage.lcov && codecov"
+    "test": "cross-env NODE_ENV=test CLUSTER=disabled nyc mocha -t 10000 -r ./node_modules/ts-node/register -r ./node_modules/source-map-support/register api/**/*.spec.ts",
+    "test-ci": "cross-env NODE_ENV=test CLUSTER=disabled nyc npm test && nyc report --reporter=text-lcov > coverage.lcov && codecov"
   },
   "nyc": {
     "extension": [
