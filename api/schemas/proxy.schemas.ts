@@ -16,6 +16,7 @@ const ProxySchemas = {
         },
         proxyId: {
           type: 'string',
+          required: false,
         },
       },
     }

@@ -220,14 +220,18 @@ class ProxyService {
     return this.get_selective(proxy_id).then((proxy) => {
       // ip-port 应该是唯一的
       let hosts = proxy.hosts.toObject();
-      let existIpPort = hosts.filter(res => {
-        return (res.target === host.target);
-      });
-      if (existIpPort.length === 0) {
-        proxy.hosts.push(host);
-        return proxy.save();
+      if (hosts.length === 0) { // 第一次创建时自动设为默认
+        host.active = true;
+      } else { // 是不是已经存在
+        let existIpPort = hosts.filter(res => {
+          return (res.target === host.target);
+        });
+        if (existIpPort.length > 0) {
+          return Promise.reject(CODE.HOST_ALREADY_EXIST);
+        }
       }
-      return Promise.reject(CODE.HOST_ALREADY_EXIST);
+      proxy.hosts.push(host);
+      return proxy.save();
     }).then((proxy) => {
       return Promise.resolve(proxy.hosts.pop());
     });
