@@ -1,9 +1,16 @@
 import { InterfaceModel } from "../models/Interface/index.d";
 import Interface from "../models/Interface";
 import { service } from "../core";
+import CODE from "../constants/code";
+import RequestService from "./request";
+import { RequestModel } from "../models/Request/index.d";
 
 @service()
 class InterfaceService {
+  constructor(
+    private requestService: RequestService,
+  ) {}
+
   create_batch(
     proxy_id: string,
     interfaces: InterfaceModel.InterfaceInfo[],
@@ -28,6 +35,12 @@ class InterfaceService {
     })).then(() => {
       return Interface.insertMany(should_create);
     });
+  }
+  
+  get_selective(
+    interface_id: string,
+  ) {
+    return Interface.findById(interface_id);
   }
 
   list_proxy_interfaces(
@@ -68,13 +81,42 @@ class InterfaceService {
   ) {
     return Interface.findByIdAndUpdate(interface_id, data, {
       new: true,
+    }).then(res => {
+      if (res) {
+        return Promise.resolve(res);
+      }
+      return Promise.reject(CODE.INTERFACE_NOT_EXIST);
     });
+  }
+  
+  private guess_field_type(
+    fieldValues: any[],
+  ) {
+    
+  }
+
+  private combine_requests(
+    requests: RequestModel.Request[]
+  ) {
   }
 
   analyse_interface(
     interface_id: string,
   ) {
     // 拿资料，那所有记录，分析
+    return this.get_selective(interface_id).then(
+      inter => {
+        if (inter) {
+          return this.requestService.list_interface_history(inter.proxy, inter.url, inter.method);
+        }
+        
+        return Promise.reject(CODE.INTERFACE_NOT_EXIST);
+      }
+    ).then(requests => {
+      // const {
+      //   requestHeaders, resquestBody, responseHeaders, responseBody,
+      // } = this.combine_requests(requests);
+    });
   }
 }
 

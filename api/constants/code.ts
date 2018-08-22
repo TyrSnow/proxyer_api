@@ -64,6 +64,10 @@ const CODE = {
 
   // 请求
   REQUEST_NOT_EXIST: C(50404, '请求不存在或已经被删除'),
+
+  // 接口
+  PROXY_INTERFACE_NOT_EXIST: C(60000, '代理当前没有可用的接口'),
+  INTERFACE_NOT_EXIST: C(60404, '接口不存在'),
 };
 
 export default CODE;

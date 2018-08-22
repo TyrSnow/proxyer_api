@@ -4,6 +4,13 @@ import { InterfaceModel } from './index.d';
 let model = new mongoose.Schema({
   url: String,
   method: Number,
+  name: String,
+  desc: String,
+  requestHeaders: Object,
+  requestParams: Object,
+  requestBody: Object,
+  responseHeaders: Object,
+  responseBody: Object,
   proxy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Proxy',

@@ -5,6 +5,7 @@ export function timingCompair(str0: string, str1: string): boolean {
   const len1 = str1.length;
   let len = Math.max(len0, len1);
   let diff = 0;
+  let spin = 0;
   let char0;
   let char1;
   while (len > -1) {
@@ -12,6 +13,10 @@ export function timingCompair(str0: string, str1: string): boolean {
     char1 = str1[len];
     if (char0 !== char1) {
       diff += 1;
+    } else {
+      spin += 1;
+      len -= 1;
+      continue;
     }
     len -= 1;
   }

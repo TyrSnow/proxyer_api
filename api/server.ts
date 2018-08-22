@@ -8,6 +8,7 @@ process.on('uncaughtException', (err) => {
 process.on('unhandledRejection', (err) => {
   console.error('unhandledRejection: ', err);
 });
+
 const app = new App();
 const server = app.listen(config.port, () => {
   console.log('Server start at port: ', config.port);
