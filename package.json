@@ -32,8 +32,6 @@
     "all": true
   },
   "dependencies": {
-    "@types/query-string": "^6.1.0",
-    "@types/v8-profiler": "^0.0.5",
     "async": "^2.6.1",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
@@ -51,6 +49,8 @@
     "ws": "^6.0.0"
   },
   "devDependencies": {
+    "@types/query-string": "^6.1.0",
+    "@types/v8-profiler": "^0.0.5",
     "@types/async": "^2.0.49",
     "@types/body-parser": "^1.16.7",
     "@types/chai": "^4.0.4",

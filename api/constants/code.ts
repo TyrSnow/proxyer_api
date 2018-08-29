@@ -14,7 +14,8 @@ const CODE = {
   ILLEGAL_ID: C(10400, '非法的参数'),
   OPERATIONS_PART_COMPLETE: C(10501, '部分操作未能完成'), // 非批量导入功能不要用这个错误
   ACCESS_DENY: C(10400, '用户操作被拒绝'),
-  DOC_NOT_EXIST: C(10401, '资源不存在'),
+  DOC_NOT_EXIST: C(10401, '资源不存在', 404),
+  DUMPLICATE_FIELD: C(10402, '重复的字段'),
   RESOURCE_CREATED: C(10500, '开始生成资源'), // 异步操作
   RESOURCE_NOT_READY: C(10501, '资源没有就绪'),
   RESOURCE_ERORR: C(10502, '资源生成失败'),

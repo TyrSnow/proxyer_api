@@ -2,29 +2,16 @@ import { service } from "../core";
 
 @service()
 class SystemService {
-  /** TODO: 放数据库并可配置 */
-  static GUEST_PREFIX = '游客';
-  static GUEST_PASSWORD = 'guest_123';
-  
-  get_global(name: string) {
-    return SystemService[name];
+  private GUEST_PREFIX = 'guest';
+  private GUEST_PASSWORD = '123456';
+
+  get_global(name) {
+     return this[name];
+  }
+  backup() { // 备份系统数据
   }
 
-  get_config() { // 读取系统配置
-  }
-  
-  update_config() { // 更新配置
-  }
-
-  get_dict_by_name(name: string) { // 读取字典
-
-  }
-
-  get_dict_by_id(id: string) {
-
-  }
-
-  restore() { // 重置系统
+  reset() { // 重置系统
   }
 
   restart() { // 重启系统

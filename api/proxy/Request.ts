@@ -1,6 +1,7 @@
 /// <reference path="./index.d.ts" />
 import * as url from 'url';
 import * as http from 'http';
+import * as https from 'https';
 import { ObjectId } from 'bson';
 import { Throttle } from 'stream-throttle';
 import * as queryString from 'query-string';
@@ -43,6 +44,11 @@ class ProxyRequest {
   static change_origin(option: any, host: HostOption) {
     if (host.changeOrigin) {
       option.headers.host = host.hostname;
+      if (host.port) {
+        option.port = host.port;
+      } else {
+        delete option.port;
+      }
       return option;
     }
     return option;
@@ -158,20 +164,20 @@ class ProxyRequest {
     });
   }
 
-  proxy_through(req, res) {
+  proxy_through(req, res, request = http.request) {
     let { pattern } = this;
     let { host }= this;
     let { method, headers, hostname, path, port } = this.req;
-    const { changeOrigin } = host;
+    const { changeOrigin, protocol } = host;
     let option = ProxyRequest.change_origin({
       method,
       headers: Object.assign({}, headers),
       path: changeOrigin ? this.realPath : path,
       hostname: changeOrigin ? this.realHostname : hostname,
-      port: changeOrigin ? this.realPort : port,
+      port,
     }, host);
 
-    let nReq = http.request(option, (nRes) => {
+    let nReq = request(option, (nRes) => {
       this.responseHeaders = nRes.headers;
       this.res.writeHead(nRes.statusCode, nRes.headers);
       nRes.on('data', (data) => {
@@ -202,7 +208,7 @@ class ProxyRequest {
       this.requestContent+= data;
     }).pipe(nReq);
   }
-
+  
   proxy(req = this.req, res = this.res) {
     if (this.pattern.handle) {
       if (this.pattern.handle === PATTERN_HANDLE_TYPE.MOCK) {
@@ -212,6 +218,10 @@ class ProxyRequest {
         this.mock = true;
         return this.proxy_block(req, res);
       }
+    }
+    // console.log(this.host.protocol);
+    if (this.host.protocol === 'https:') {
+      return this.proxy_through(req, res, https.request);
     }
     return this.proxy_through(req, res);
   }

@@ -1,7 +1,7 @@
 import * as express from 'express';
 import * as log4js from 'log4js';
 import * as bodyParser from 'body-parser';
-import Application from './core/application';
+import { Application } from './core';
 
 import './start';
 import time from './middleware/time';

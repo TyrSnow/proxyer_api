@@ -3,4 +3,5 @@ interface HostOption {
   port: string
   path: string
   changeOrigin?: boolean
+  protocol: string
 }

@@ -48,13 +48,14 @@ export default class App {
         }
       }
 
-      let { hostname, port, path} = url.parse(target);
+      let { protocol, hostname, port, path} = url.parse(target);
 
       let hostOption = {
         hostname,
         port,
         path,
         changeOrigin,
+        protocol,
       };
 
       this.hostMap.set(host._id, hostOption);

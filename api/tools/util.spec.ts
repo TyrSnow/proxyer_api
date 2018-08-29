@@ -26,19 +26,19 @@ describe('Test timingCompair', () => {
       'abcdefg hijklmn opqrst uvwxyz 0123456789',
       'abcdefg hijklmn optrst uvwxyz 0123456789',
     ]); // 第一遍跑似乎一定会很慢
-    const halfTime = timed(1000, timingCompair, [
+    const halfTime = timed(10000, timingCompair, [
       'abcdefg hijklmn opqrst uvwxyz 0123456789',
       'abcdefg hijklmn optrst uvwxyz 0123456789',
     ]);
-    const zeroTime = timed(1000, timingCompair, [
+    const zeroTime = timed(10000, timingCompair, [
       'abcdefg hijklmn opqrst uvwxyz 0123456789',
       'bbcdefg hijklmn opqrst uvwxyz 0123456789',
     ]);
-    const fullETime = timed(1000, timingCompair, [
+    const fullETime = timed(10000, timingCompair, [
       'abcdefg hijklmn opqrst uvwxyz 0123456788',
       'abcdefg hijklmn opqrst uvwxyz 0123456789',
     ]);
-    const fullTime = timed(1000, timingCompair, [
+    const fullTime = timed(10000, timingCompair, [
       'abcdefg hijklmn opqrst uvwxyz 0123456789',
       'abcdefg hijklmn opqrst uvwxyz 0123456789',
     ]);

@@ -11,14 +11,13 @@ export function timingCompair(str0: string, str1: string): boolean {
   while (len > -1) {
     char0 = str0[len];
     char1 = str1[len];
+    len -= 1;
     if (char0 !== char1) {
       diff += 1;
+      continue;
     } else {
       spin += 1;
-      len -= 1;
-      continue;
     }
-    len -= 1;
   }
 
   return diff === 0;
