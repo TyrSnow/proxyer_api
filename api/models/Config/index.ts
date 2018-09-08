@@ -9,14 +9,11 @@ const model = new Schema({
     type: String,
     unique: true,
   },
-  value: {
-    type: String,
-    unique: true,
-  },
+  value: Schema.Types.Mixed,
   label: String,
   desc: String,
   enum: [String],
-  type: String,
+  group: String,
 });
 
 model.index({

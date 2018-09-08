@@ -5,8 +5,8 @@ declare namespace ConfigModel {
     name: string
     label?: string
     desc?: string
-    value: string
+    value: string | string[]
     enum?: any[]
-    type?: string
+    group?: string
   }
 }

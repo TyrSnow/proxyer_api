@@ -72,7 +72,7 @@ export default class App {
   match_request_pattern(req: Request) {
     return this.patterns.find(pattern => {
       if (pattern.allow_methods) {
-        if (!(METHOD_MAP[req.method] in pattern.allow_methods)) {
+        if (pattern.allow_methods.indexOf(METHOD_MAP[req.method]) === -1) {
           return false;
         }
       }

@@ -4,7 +4,6 @@ import { controller, route } from "../core";
   path: '/',
 })
 class DeployController {
-  
   @route('/stats')
   get_sys_stat(req, res) {
     // 获取当前部署状态

@@ -12,13 +12,13 @@ const debug = log4js.getLogger('debug');
 
 class App extends Application {
   private middlewares = [
+    time,
     log4js.connectLogger(logger, {
       level: 'auto',
       format: ':method :url',
     }),
     bodyParser.json({ limit: '5mb' }),
     bodyParser.urlencoded({ extended: true }),
-    time,
   ];
 
   private errors = [
